@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="cafePU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <class>com.cafe.model.entity.LoaiThucUong</class>
+        <class>com.cafe.model.entity.ThucUong</class>
+        <class>com.cafe.model.entity.CongThuc</class>
+        <class>com.cafe.model.entity.NguyenLieu</class>
+        <class>com.cafe.model.entity.KhachHang</class>
+        <class>com.cafe.model.entity.Ban</class>
+        <class>com.cafe.model.entity.PhuongThucThanhToan</class>
+        <class>com.cafe.model.entity.NhanVien</class>
+        <class>com.cafe.model.entity.HoaDon</class>
+        <class>com.cafe.model.entity.NhaCungCap</class>
+        <class>com.cafe.model.entity.PhieuNhap</class>
+        <class>com.cafe.model.entity.ChiTietHoaDon</class>
+        <class>com.cafe.model.entity.ChiTietHoaDonId</class>
+        <class>com.cafe.model.entity.ChiTietCongThuc</class>
+        <class>com.cafe.model.entity.ChiTietCongThucId</class>
+        <class>com.cafe.model.entity.ChiTietPhieuNhap</class>
+        <class>com.cafe.model.entity.ChiTietPhieuNhapId</class>
+
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/QuanLyCafe?useSSL=false&amp;serverTimezone=Asia/Ho_Chi_Minh&amp;allowPublicKeyRetrieval=true"/>
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <!-- Vui lòng thay đổi password nếu cần -->
+            <property name="jakarta.persistence.jdbc.password" value="123456"/>
+
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
