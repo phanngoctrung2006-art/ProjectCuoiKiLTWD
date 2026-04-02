@@ -41,4 +41,9 @@ public interface KhachHangService {
      * Tìm kiếm khách hàng theo số điện thoại.
      */
     KhachHang findByPhone(String phone);
+
+    /**
+     * Tìm kiếm khách hàng theo tên chính xác.
+     */
+    KhachHang findByName(String name);
 }

@@ -5,6 +5,7 @@ import com.cafe.dao.*;
 import com.cafe.dao.impl.*;
 import com.cafe.service.HoaDonService;
 import com.cafe.service.KhachHangService;
+
 import com.cafe.service.ReportService;
 import com.cafe.service.implement.HoaDonServiceImpl;
 import com.cafe.service.implement.KhachHangServiceImpl;
@@ -14,7 +15,7 @@ import com.cafe.view.MainFrame;
 import javax.swing.*;
 
 /**
- * Entry point cho ứng dụng Quản Lý Bán Hàng Café.
+ * Entry point cho ứng dụng Quản Lý Bán Hàng Café
  */
 public class AppLauncher {
     public static void main(String[] args) {
@@ -43,4 +44,8 @@ public class AppLauncher {
         });
     }
 }
+
+
+
+
 

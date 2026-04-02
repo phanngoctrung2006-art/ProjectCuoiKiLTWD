@@ -6,6 +6,8 @@ import com.cafe.model.entity.KhachHang;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,79 +22,162 @@ public class HoaDonManagementPanel extends JPanel {
     private JTextField txtNgayLap;
     private JTextField txtTongTien;
     private JTextField txtGhiChu;
-    private JComboBox<KhachHang> cboKhachHang;
+    private JTextField txtTenKhachHang;
     private JTable tableHoaDon;
     private DefaultTableModel modelHoaDon;
     private DefaultTableModel modelReport;
+    private BufferedImage backgroundImage;
 
     public HoaDonManagementPanel(HoaDonController controller) {
         this.controller = controller;
+        loadBackgroundImage();
         initComponents();
         loadData();
     }
 
-    private void initComponents() {
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+    private void loadBackgroundImage() {
+        try {
+            String imagePath = "src/main/resources/anh-mo-ta.png";
+            File imageFile = new File(imagePath);
+            if (imageFile.exists()) {
+                backgroundImage = javax.imageio.ImageIO.read(imageFile);
+            }
+        } catch (Exception e) {
+            System.out.println("Không thể tải hình ảnh background: " + e.getMessage());
+        }
+    }
 
-        // Panel trên - Form nhập liệu
-        JPanel panelForm = buildFormPanel();
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (backgroundImage != null) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+            g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        }
+    }
+
+    private void initComponents() {
+        setLayout(new BorderLayout(0, 0));
+        setOpaque(true);
+        setBackground(new Color(20, 25, 35)); // Màu đen đậm - modern style
+
+        // Header Panel với gradient
+        JPanel headerPanel = createHeaderPanel();
         
-        // Panel giữa - Table hóa đơn
-        JTabbedPane tabbedPane = new JTabbedPane();
+        // Content Panel chính
+        JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
+        contentPanel.setOpaque(false);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        // Form panel
+        JPanel formPanel = buildFormPanel();
+        
+        // Tabbed Pane
+        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        Font tabFont = new Font("Segoe UI", Font.BOLD, 13);
+        tabbedPane.setFont(tabFont);
+        tabbedPane.setBackground(new Color(35, 45, 60));
+        tabbedPane.setForeground(Color.WHITE);
         tabbedPane.addTab("Quản Lý Hóa Đơn", buildOrderTablePanel());
         tabbedPane.addTab("Báo Cáo", buildReportPanel());
         
-        add(panelForm, BorderLayout.NORTH);
-        add(tabbedPane, BorderLayout.CENTER);
+        // Set tab header component font
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            JLabel tabLabel = new JLabel(tabbedPane.getTitleAt(i));
+            tabLabel.setFont(tabFont);
+            tabLabel.setForeground(Color.WHITE);
+            tabbedPane.setTabComponentAt(i, tabLabel);
+        }
+        
+        contentPanel.add(formPanel, BorderLayout.NORTH);
+        contentPanel.add(tabbedPane, BorderLayout.CENTER);
+        
+        add(headerPanel, BorderLayout.NORTH);
+        add(contentPanel, BorderLayout.CENTER);
+    }
+
+    private JPanel createHeaderPanel() {
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                // Tạo gradient từ xanh dương sang xanh nhạt
+                Paint gp = new java.awt.GradientPaint(0, 0, new Color(30, 144, 255), getWidth(), 0, new Color(0, 191, 255));
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setPreferredSize(new Dimension(0, 70));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 15));
+        
+        JLabel titleLabel = new JLabel("HỆ THỐNG QUẢN LÝ BÁN HÀNG CAFÉ");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titleLabel.setForeground(Color.WHITE);
+        
+        panel.add(titleLabel);
+        return panel;
     }
 
     private JPanel buildFormPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createTitledBorder("Thông Tin Hóa Đơn"));
+        panel.setBackground(new Color(35, 45, 60)); // Màu xám đen hiện đại
+        panel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(100, 200, 255), 2),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(8, 12, 8, 12);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Dòng 1
         gbc.gridx = 0; gbc.gridy = 0;
-        panel.add(new JLabel("Mã Hóa Đơn:"), gbc);
+        JLabel lblMaHoaDon = createStyledLabel("Mã Hóa Đơn:");
+        panel.add(lblMaHoaDon, gbc);
         
         gbc.gridx = 1;
-        txtMaHoaDon = new JTextField(10);
+        txtMaHoaDon = createStyledTextField(12);
         panel.add(txtMaHoaDon, gbc);
 
         gbc.gridx = 2;
-        panel.add(new JLabel("Ngày Lập (yyyy-MM-dd):"), gbc);
+        JLabel lblNgayLap = createStyledLabel(" Ngày Lập:");
+        panel.add(lblNgayLap, gbc);
         
         gbc.gridx = 3;
-        txtNgayLap = new JTextField(10);
+        txtNgayLap = createStyledTextField(12);
         txtNgayLap.setText(LocalDate.now().toString());
         panel.add(txtNgayLap, gbc);
 
         // Dòng 2
         gbc.gridx = 0; gbc.gridy = 1;
-        panel.add(new JLabel("Khách Hàng:"), gbc);
+        JLabel lblKhachHang = createStyledLabel("Khách Hàng:");
+        panel.add(lblKhachHang, gbc);
         
         gbc.gridx = 1;
-        cboKhachHang = new JComboBox<>();
-        panel.add(cboKhachHang, gbc);
+        txtTenKhachHang = createStyledTextField(12);
+        panel.add(txtTenKhachHang, gbc);
 
         gbc.gridx = 2;
-        panel.add(new JLabel("Tổng Tiền:"), gbc);
+        JLabel lblTongTien = createStyledLabel("Tổng Tiền:");
+        panel.add(lblTongTien, gbc);
         
         gbc.gridx = 3;
-        txtTongTien = new JTextField(10);
+        txtTongTien = createStyledTextField(12);
         txtTongTien.setText("0");
         panel.add(txtTongTien, gbc);
 
         // Dòng 3
         gbc.gridx = 0; gbc.gridy = 2;
-        panel.add(new JLabel("Ghi Chú:"), gbc);
+        JLabel lblGhiChu = createStyledLabel("Ghi Chú:");
+        panel.add(lblGhiChu, gbc);
         
         gbc.gridx = 1;
         gbc.gridwidth = 3;
-        txtGhiChu = new JTextField();
+        txtGhiChu = createStyledTextField(50);
         panel.add(txtGhiChu, gbc);
         gbc.gridwidth = 1;
 
@@ -105,14 +190,32 @@ public class HoaDonManagementPanel extends JPanel {
         return panel;
     }
 
+    private JLabel createStyledLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        label.setForeground(new Color(100, 200, 255));
+        return label;
+    }
+
+    private JTextField createStyledTextField(int columns) {
+        JTextField txt = new JTextField(columns);
+        txt.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        txt.setBackground(new Color(50, 60, 80));
+        txt.setForeground(Color.WHITE);
+        txt.setBorder(BorderFactory.createLineBorder(new Color(80, 120, 180), 1));
+        txt.setCaretColor(Color.WHITE);
+        return txt;
+    }
+
     private JPanel buildButtonPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
+        panel.setBackground(new Color(35, 45, 60));
         
-        JButton btnNew = new JButton("Mới");
-        JButton btnSave = new JButton("Lưu");
-        JButton btnUpdate = new JButton("Cập Nhật");
-        JButton btnDelete = new JButton("Xóa");
-        JButton btnRefresh = new JButton("Làm Mới");
+        JButton btnNew = createModernButton("Mới", new Color(76, 175, 80));
+        JButton btnSave = createModernButton("Lưu", new Color(33, 150, 243));
+        JButton btnUpdate = createModernButton("Cập Nhật", new Color(255, 152, 0));
+        JButton btnDelete = createModernButton("Xóa", new Color(244, 67, 54));
+        JButton btnRefresh = createModernButton("Làm Mới", new Color(156, 39, 176));
 
         btnNew.addActionListener(e -> clearForm());
         btnSave.addActionListener(e -> saveHoaDon());
@@ -129,6 +232,28 @@ public class HoaDonManagementPanel extends JPanel {
         return panel;
     }
 
+    private JButton createModernButton(String text, Color bgColor) {
+        JButton btn = new JButton(text);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btn.setBackground(bgColor);
+        btn.setForeground(Color.WHITE);
+        btn.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(0, 0, 0, 50), 1),
+            BorderFactory.createEmptyBorder(8, 15, 8, 15)
+        ));
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(bgColor.brighter());
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(bgColor);
+            }
+        });
+        return btn;
+    }
+
     private JScrollPane buildOrderTablePanel() {
         modelHoaDon = new DefaultTableModel(
             new String[]{"Mã", "Ngày Lập", "Khách Hàng", "Tổng Tiền", "Ghi Chú"}, 0
@@ -138,24 +263,42 @@ public class HoaDonManagementPanel extends JPanel {
         };
 
         tableHoaDon = new JTable(modelHoaDon);
+        tableHoaDon.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        tableHoaDon.setRowHeight(28);
+        tableHoaDon.setBackground(new Color(50, 60, 80));
+        tableHoaDon.setForeground(Color.WHITE);
+        tableHoaDon.setGridColor(new Color(80, 100, 130));
+        tableHoaDon.setSelectionBackground(new Color(30, 144, 255));
+        tableHoaDon.setSelectionForeground(Color.WHITE);
+        
+        tableHoaDon.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+        tableHoaDon.getTableHeader().setBackground(new Color(30, 100, 180));
+        tableHoaDon.getTableHeader().setForeground(Color.WHITE);
+        tableHoaDon.getTableHeader().setPreferredSize(new Dimension(0, 30));
+        
         tableHoaDon.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && tableHoaDon.getSelectedRow() != -1) {
                 loadOrderToForm();
             }
         });
 
-        return new JScrollPane(tableHoaDon);
+        JScrollPane scrollPane = new JScrollPane(tableHoaDon);
+        scrollPane.setBackground(new Color(50, 60, 80));
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(80, 120, 180), 2));
+        return scrollPane;
     }
 
     private JPanel buildReportPanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setOpaque(false);
 
-        JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        panelButtons.setBackground(new Color(35, 45, 60));
         
-        JButton btnReportAll = new JButton("Tất Cả Hóa Đơn");
-        JButton btnReportRevenue = new JButton("Doanh Thu Khách");
-        JButton btnReportProducts = new JButton("Sản Phẩm Bán Chạy");
-        JButton btnReportStats = new JButton("Thống Kê");
+        JButton btnReportAll = createModernButton("Tất Cả", new Color(0, 200, 200));
+        JButton btnReportRevenue = createModernButton("Doanh Thu", new Color(255, 100, 150));
+        JButton btnReportProducts = createModernButton("Bán Chạy", new Color(100, 200, 100));
+        JButton btnReportStats = createModernButton("Thống Kê", new Color(255, 170, 50));
 
         btnReportAll.addActionListener(e -> showAllOrders());
         btnReportRevenue.addActionListener(e -> showRevenueByCustomer());
@@ -173,7 +316,21 @@ public class HoaDonManagementPanel extends JPanel {
         };
 
         JTable tableReport = new JTable(modelReport);
+        tableReport.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        tableReport.setRowHeight(28);
+        tableReport.setBackground(new Color(50, 60, 80));
+        tableReport.setForeground(Color.WHITE);
+        tableReport.setGridColor(new Color(80, 100, 130));
+        tableReport.setSelectionBackground(new Color(30, 144, 255));
+        tableReport.setSelectionForeground(Color.WHITE);
+        tableReport.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+        tableReport.getTableHeader().setBackground(new Color(30, 100, 180));
+        tableReport.getTableHeader().setForeground(Color.WHITE);
+        tableReport.getTableHeader().setPreferredSize(new Dimension(0, 30));
+        
         JScrollPane scrollPane = new JScrollPane(tableReport);
+        scrollPane.setBackground(new Color(50, 60, 80));
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(80, 120, 180), 2));
 
         panel.add(panelButtons, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -187,11 +344,8 @@ public class HoaDonManagementPanel extends JPanel {
     }
 
     private void loadKhachHang() {
-        cboKhachHang.removeAllItems();
-        List<KhachHang> list = controller.getAllKhachHang();
-        for (KhachHang kh : list) {
-            cboKhachHang.addItem(kh);
-        }
+        txtTenKhachHang.setText("");
+        // Không còn sử dụng JComboBox cho Khách Hàng
     }
 
     private void refreshHoaDonTable() {
@@ -219,16 +373,7 @@ public class HoaDonManagementPanel extends JPanel {
             txtMaHoaDon.setText(hd.getMaHoaDon());
             txtNgayLap.setText(hd.getNgayLap().toString());
             txtTongTien.setText(hd.getTongTien().toString());
-            
-            if (hd.getKhachHang() != null) {
-                for (int i = 0; i < cboKhachHang.getItemCount(); i++) {
-                    KhachHang kh = cboKhachHang.getItemAt(i);
-                    if (kh.getMaKhachHang().equals(hd.getKhachHang().getMaKhachHang())) {
-                        cboKhachHang.setSelectedIndex(i);
-                        break;
-                    }
-                }
-            }
+            txtTenKhachHang.setText(hd.getKhachHang() != null ? hd.getKhachHang().getTenKhachHang() : "");
         }
     }
 
@@ -237,12 +382,28 @@ public class HoaDonManagementPanel extends JPanel {
             String ma = txtMaHoaDon.getText().trim();
             String ngay = txtNgayLap.getText().trim();
             String tien = txtTongTien.getText().trim();
-            KhachHang kh = (KhachHang) cboKhachHang.getSelectedItem();
+            String tenKhachHang = txtTenKhachHang.getText().trim();
 
-            if (ma.isEmpty() || ngay.isEmpty() || kh == null) {
+            if (ma.isEmpty() || ngay.isEmpty() || tenKhachHang.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin", 
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
+            }
+
+            KhachHang kh = controller.getKhachHangByName(tenKhachHang);
+            if (kh == null) {
+                // Nếu không tìm thấy khách hàng, có thể tạo mới hoặc thông báo lỗi
+                int confirm = JOptionPane.showConfirmDialog(this, 
+                    "Khách hàng không tồn tại. Bạn có muốn tạo mới không?", 
+                    "Xác nhận", JOptionPane.YES_NO_OPTION);
+                
+                if (confirm == JOptionPane.YES_OPTION) {
+                    kh = new KhachHang();
+                    kh.setTenKhachHang(tenKhachHang);
+                    controller.createKhachHang(kh);
+                } else {
+                    return;
+                }
             }
 
             HoaDon hd = new HoaDon();
@@ -279,7 +440,9 @@ public class HoaDonManagementPanel extends JPanel {
             }
 
             hd.setTongTien(new java.math.BigDecimal(txtTongTien.getText()));
-            hd.setKhachHang((KhachHang) cboKhachHang.getSelectedItem());
+            String tenKhachHang = txtTenKhachHang.getText().trim();
+            KhachHang kh = controller.getKhachHangByName(tenKhachHang);
+            hd.setKhachHang(kh);
 
             controller.updateHoaDon(hd);
             JOptionPane.showMessageDialog(this, "Cập nhật thành công", 
@@ -322,9 +485,7 @@ public class HoaDonManagementPanel extends JPanel {
         txtNgayLap.setText(LocalDate.now().toString());
         txtTongTien.setText("0");
         txtGhiChu.setText("");
-        if (cboKhachHang.getItemCount() > 0) {
-            cboKhachHang.setSelectedIndex(0);
-        }
+        txtTenKhachHang.setText("");
         tableHoaDon.clearSelection();
     }
 
@@ -394,3 +555,4 @@ public class HoaDonManagementPanel extends JPanel {
         }
     }
 }
+

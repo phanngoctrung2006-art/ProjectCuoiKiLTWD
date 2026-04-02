@@ -30,11 +30,14 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     public KhachHang create(KhachHang khachHang) {
-        if (khachHang == null || khachHang.getMaKhachHang() == null || khachHang.getMaKhachHang().isEmpty()) {
-            throw new IllegalArgumentException("Mã khách hàng không được trống");
+        if (khachHang == null) {
+            throw new IllegalArgumentException("Khách hàng không được null");
         }
         if (khachHang.getTenKhachHang() == null || khachHang.getTenKhachHang().isEmpty()) {
             throw new IllegalArgumentException("Tên khách hàng không được trống");
+        }
+        if (khachHang.getMaKhachHang() == null || khachHang.getMaKhachHang().isEmpty()) {
+            khachHang.setMaKhachHang(generateNextMaKhachHang());
         }
         return khachHangDAO.save(khachHang);
     }
@@ -75,5 +78,35 @@ public class KhachHangServiceImpl implements KhachHangService {
                 .filter(k -> phone.equals(k.getSoDienThoai()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public KhachHang findByName(String name) {
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+        return khachHangDAO.findAll().stream()
+                .filter(k -> name.equalsIgnoreCase(k.getTenKhachHang()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private String generateNextMaKhachHang() {
+        List<KhachHang> all = khachHangDAO.findAll();
+        int maxNum = 0;
+        for (KhachHang kh : all) {
+            String ma = kh.getMaKhachHang();
+            if (ma != null && ma.startsWith("KH")) {
+                try {
+                    int num = Integer.parseInt(ma.substring(2));
+                    if (num > maxNum) {
+                        maxNum = num;
+                    }
+                } catch (NumberFormatException e) {
+                    // Ignore invalid format
+                }
+            }
+        }
+        return String.format("KH%02d", maxNum + 1);
     }
 }
