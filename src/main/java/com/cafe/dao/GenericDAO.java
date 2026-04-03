@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Interface Generic cho DAO cung cấp các hàm CRUD cơ bản.
- * 
+ *
  * @param <T>  Kiểu Entity
  * @param <ID> Kiểu khóa chính
  */
@@ -41,4 +41,17 @@ public interface GenericDAO<T, ID> {
      * @return Danh sách Entity
      */
     List<T> findAll();
+
+    /**
+     * Đếm tổng số bản ghi trong bảng.
+     * @return Số lượng bản ghi
+     */
+    long count();
+
+    /**
+     * Kiểm tra Entity có tồn tại theo khóa chính hay không.
+     * @param id Khóa chính cần kiểm tra
+     * @return true nếu tồn tại, false nếu không
+     */
+    boolean existsById(ID id);
 }

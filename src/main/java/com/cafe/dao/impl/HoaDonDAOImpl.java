@@ -5,6 +5,8 @@ import com.cafe.model.entity.HoaDon;
 import com.cafe.util.HibernateUtil;
 import jakarta.persistence.EntityManager;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,9 +14,6 @@ import java.util.List;
  */
 public class HoaDonDAOImpl extends GenericDAOImpl<HoaDon, String> implements HoaDonDAO {
 
-    /**
-     * Khởi tạo DAO cho Entity HoaDon.
-     */
     public HoaDonDAOImpl() {
         super(HoaDon.class);
     }
@@ -23,8 +22,16 @@ public class HoaDonDAOImpl extends GenericDAOImpl<HoaDon, String> implements Hoa
     public List<HoaDon> findAll() {
         EntityManager em = HibernateUtil.getEntityManager();
         try {
-            String jpql = "SELECT h FROM HoaDon h LEFT JOIN FETCH h.KhachHang";
+            String jpql = "SELECT DISTINCT h FROM HoaDon h " +
+                    "LEFT JOIN FETCH h.KhachHang " +
+                    "LEFT JOIN FETCH h.Ban " +
+                    "LEFT JOIN FETCH h.PhuongThucThanhToan " +
+                    "LEFT JOIN FETCH h.NhanVien " +
+                    "ORDER BY h.NgayLap DESC";
             return em.createQuery(jpql, HoaDon.class).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         } finally {
             em.close();
         }
@@ -34,10 +41,80 @@ public class HoaDonDAOImpl extends GenericDAOImpl<HoaDon, String> implements Hoa
     public HoaDon findById(String id) {
         EntityManager em = HibernateUtil.getEntityManager();
         try {
-            String jpql = "SELECT h FROM HoaDon h LEFT JOIN FETCH h.KhachHang WHERE h.MaHoaDon = :id";
-            return em.createQuery(jpql, HoaDon.class)
+            String jpql = "SELECT h FROM HoaDon h " +
+                    "LEFT JOIN FETCH h.KhachHang " +
+                    "LEFT JOIN FETCH h.Ban " +
+                    "LEFT JOIN FETCH h.PhuongThucThanhToan " +
+                    "LEFT JOIN FETCH h.NhanVien " +
+                    "WHERE h.MaHoaDon = :id";
+            List<HoaDon> results = em.createQuery(jpql, HoaDon.class)
                     .setParameter("id", id)
-                    .getSingleResult();
+                    .getResultList();
+            return results.isEmpty() ? null : results.get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<HoaDon> findByNgayLapBetween(Date tuNgay, Date denNgay) {
+        EntityManager em = HibernateUtil.getEntityManager();
+        try {
+            String jpql = "SELECT DISTINCT h FROM HoaDon h " +
+                    "LEFT JOIN FETCH h.KhachHang " +
+                    "LEFT JOIN FETCH h.NhanVien " +
+                    "WHERE h.NgayLap BETWEEN :tuNgay AND :denNgay " +
+                    "ORDER BY h.NgayLap DESC";
+            return em.createQuery(jpql, HoaDon.class)
+                    .setParameter("tuNgay", tuNgay)
+                    .setParameter("denNgay", denNgay)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<HoaDon> findByMaKhachHang(String maKhachHang) {
+        EntityManager em = HibernateUtil.getEntityManager();
+        try {
+            String jpql = "SELECT DISTINCT h FROM HoaDon h " +
+                    "LEFT JOIN FETCH h.KhachHang " +
+                    "LEFT JOIN FETCH h.NhanVien " +
+                    "WHERE h.KhachHang.MaKhachHang = :maKH " +
+                    "ORDER BY h.NgayLap DESC";
+            return em.createQuery(jpql, HoaDon.class)
+                    .setParameter("maKH", maKhachHang)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<HoaDon> findByMaNhanVien(String maNhanVien) {
+        EntityManager em = HibernateUtil.getEntityManager();
+        try {
+            String jpql = "SELECT DISTINCT h FROM HoaDon h " +
+                    "LEFT JOIN FETCH h.KhachHang " +
+                    "LEFT JOIN FETCH h.NhanVien " +
+                    "WHERE h.NhanVien.MaNhanVien = :maNV " +
+                    "ORDER BY h.NgayLap DESC";
+            return em.createQuery(jpql, HoaDon.class)
+                    .setParameter("maNV", maNhanVien)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         } finally {
             em.close();
         }

@@ -5,10 +5,12 @@ import com.cafe.util.HibernateUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class thực thi (Implementation) cho GenericDAO.
+ * Cung cấp các hàm CRUD cơ bản sử dụng JPA EntityManager.
  *
  * @param <T>  Kiểu Entity
  * @param <ID> Kiểu khóa chính
@@ -19,6 +21,13 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
     public GenericDAOImpl(Class<T> entityClass) {
         this.entityClass = entityClass;
+    }
+
+    /**
+     * Lấy class của Entity (dùng cho các lớp con).
+     */
+    protected Class<T> getEntityClass() {
+        return entityClass;
     }
 
     @Override
@@ -92,6 +101,37 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
         try {
             String jpql = "SELECT e FROM " + entityClass.getSimpleName() + " e";
             return em.createQuery(jpql, entityClass).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public long count() {
+        EntityManager em = HibernateUtil.getEntityManager();
+        try {
+            String jpql = "SELECT COUNT(e) FROM " + entityClass.getSimpleName() + " e";
+            Long result = em.createQuery(jpql, Long.class).getSingleResult();
+            return result != null ? result : 0L;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public boolean existsById(ID id) {
+        EntityManager em = HibernateUtil.getEntityManager();
+        try {
+            return em.find(entityClass, id) != null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         } finally {
             em.close();
         }
