@@ -16,13 +16,71 @@ public class HoaDonController {
     private final HoaDonService hoaDonService;
     private final KhachHangService khachHangService;
     private final ReportService reportService;
+    private final com.cafe.service.ChiTietHoaDonService chiTietHoaDonService;
+    private final com.cafe.service.ThucUongService thucUongService;
 
     public HoaDonController(HoaDonService hoaDonService, 
                            KhachHangService khachHangService,
-                           ReportService reportService) {
+                           ReportService reportService,
+                           com.cafe.service.ChiTietHoaDonService chiTietHoaDonService,
+                           com.cafe.service.ThucUongService thucUongService) {
         this.hoaDonService = hoaDonService;
         this.khachHangService = khachHangService;
         this.reportService = reportService;
+        this.chiTietHoaDonService = chiTietHoaDonService;
+        this.thucUongService = thucUongService;
+    }
+
+    // ===== Tính tổng tiền hóa đơn =====
+    public void calculateAndUpdateTongTien(String maHoaDon) {
+        List<com.cafe.model.entity.ChiTietHoaDon> details = chiTietHoaDonService.findByMaHoaDon(maHoaDon);
+        java.math.BigDecimal tongTien = java.math.BigDecimal.ZERO;
+        for (com.cafe.model.entity.ChiTietHoaDon c : details) {
+            if (c.getThucUong() != null && c.getThucUong().getGia() != null) {
+                java.math.BigDecimal thanhTien = c.getThucUong().getGia().multiply(new java.math.BigDecimal(c.getSoLuong()));
+                tongTien = tongTien.add(thanhTien);
+            }
+        }
+        HoaDon hd = hoaDonService.getById(maHoaDon);
+        if (hd != null) {
+            hd.setTongTien(tongTien);
+            hoaDonService.update(hd);
+        }
+    }
+
+    public List<com.cafe.model.entity.ThucUong> getAllThucUong() {
+        return thucUongService.getAll();
+    }
+
+    public void addThucUongToHoaDon(String maHoaDon, String maThucUong, int soLuong) {
+        // Prepare Entities
+        HoaDon hd = hoaDonService.getById(maHoaDon);
+        com.cafe.model.entity.ThucUong tu = thucUongService.getById(maThucUong);
+        
+        // Prevent duplication
+        List<com.cafe.model.entity.ChiTietHoaDon> current = chiTietHoaDonService.findByMaHoaDon(maHoaDon);
+        com.cafe.model.entity.ChiTietHoaDon existing = null;
+        for (com.cafe.model.entity.ChiTietHoaDon c : current) {
+            if (c.getId().getMaThucUong().equals(maThucUong)) {
+                existing = c;
+                break;
+            }
+        }
+        
+        if (existing != null) {
+            existing.setSoLuong(existing.getSoLuong() + soLuong);
+            chiTietHoaDonService.update(existing); // Update via merge
+        } else {
+            com.cafe.model.entity.ChiTietHoaDon chiTiet = new com.cafe.model.entity.ChiTietHoaDon(hd, tu, soLuong);
+            chiTietHoaDonService.create(chiTiet);
+        }
+        
+        calculateAndUpdateTongTien(maHoaDon);
+    }
+    
+    public void deleteThucUongFromHoaDon(String maHoaDon, String maThucUong) {
+        chiTietHoaDonService.delete(new com.cafe.model.entity.ChiTietHoaDonId(maHoaDon, maThucUong));
+        calculateAndUpdateTongTien(maHoaDon);
     }
 
     // ===== CRUD Hóa Đơn =====
@@ -48,6 +106,10 @@ public class HoaDonController {
 
     public List<HoaDon> findHoaDonByKhachHang(String maKhachHang) {
         return hoaDonService.findByKhachHangId(maKhachHang);
+    }
+
+    public List<com.cafe.model.entity.ChiTietHoaDon> getChiTietHoaDonByMa(String maHoaDon) {
+        return chiTietHoaDonService.findByMaHoaDon(maHoaDon);
     }
 
     // ===== Quản lý Khách Hàng =====

@@ -23,17 +23,23 @@ public class AppLauncher {
         HoaDonDAO hoaDonDAO = new HoaDonDAOImpl();
         KhachHangDAO khachHangDAO = new KhachHangDAOImpl();
         ReportDAO reportDAO = new ReportDAOImpl();
+        ChiTietHoaDonDAO chiTietHoaDonDAO = new ChiTietHoaDonDAOImpl();
+        com.cafe.dao.ThucUongDAO thucUongDAO = new com.cafe.dao.impl.ThucUongDAOImpl();
 
         // Khởi tạo Service Layer
         HoaDonService hoaDonService = new HoaDonServiceImpl(hoaDonDAO);
         KhachHangService khachHangService = new KhachHangServiceImpl(khachHangDAO);
         ReportService reportService = new ReportServiceImpl(reportDAO);
+        com.cafe.service.ChiTietHoaDonService chiTietHoaDonService = new com.cafe.service.implement.ChiTietHoaDonServiceImpl(chiTietHoaDonDAO);
+        com.cafe.service.ThucUongService thucUongService = new com.cafe.service.implement.ThucUongServiceImpl(thucUongDAO);
 
         // Khởi tạo Controller
         HoaDonController hoaDonController = new HoaDonController(
             hoaDonService,
             khachHangService,
-            reportService
+            reportService,
+            chiTietHoaDonService,
+            thucUongService
         );
 
         // Khởi tạo UI

@@ -10,7 +10,7 @@ public class MainFrame extends JFrame {
     public MainFrame(HoaDonManagementPanel panel) {
         setTitle("☕ Hệ Thống Quản Lý Bán Hàng Cafe ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1400, 800);
+        setSize(2000, 1000);
         setLocationRelativeTo(null);
         setResizable(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);

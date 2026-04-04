@@ -181,6 +181,9 @@ public class HoaDonManagementPanel extends JPanel {
         gbc.gridx = 1;
         txtTongTien = createStyledTextField(12);
         txtTongTien.setText("0");
+        txtTongTien.setEditable(false);
+        txtTongTien.setToolTipText("Tổng tiền được tính tự động từ Quản Lý Món");
+        txtTongTien.setEditable(false);
         panel.add(txtTongTien, gbc);
 
         gbc.gridx = 2;
@@ -227,18 +230,21 @@ public class HoaDonManagementPanel extends JPanel {
         JButton btnUpdate = createModernButton("Cập Nhật", new Color(255, 152, 0));
         JButton btnDelete = createModernButton("Xóa", new Color(244, 67, 54));
         JButton btnRefresh = createModernButton("Làm Mới", new Color(156, 39, 176));
+        JButton btnManageDetails = createModernButton("Quản Lý Món", new Color(30, 200, 180));
 
         btnNew.addActionListener(e -> clearForm());
         btnSave.addActionListener(e -> saveHoaDon());
         btnUpdate.addActionListener(e -> updateHoaDon());
         btnDelete.addActionListener(e -> deleteHoaDon());
         btnRefresh.addActionListener(e -> loadData());
+        btnManageDetails.addActionListener(e -> openManageDetails());
 
         panel.add(btnNew);
         panel.add(btnSave);
         panel.add(btnUpdate);
         panel.add(btnDelete);
         panel.add(btnRefresh);
+        panel.add(btnManageDetails);
 
         return panel;
     }
@@ -265,7 +271,7 @@ public class HoaDonManagementPanel extends JPanel {
         return btn;
     }
 
-    private JScrollPane buildOrderTablePanel() {
+    private JComponent buildOrderTablePanel() {
         modelHoaDon = new DefaultTableModel(
                 new String[] { "Mã", "Ngày Lập", "Khách Hàng", "SĐT", "Tổng Tiền", "Ghi Chú" }, 0) {
             @Override
@@ -294,10 +300,11 @@ public class HoaDonManagementPanel extends JPanel {
             }
         });
 
-        JScrollPane scrollPane = new JScrollPane(tableHoaDon);
-        scrollPane.setBackground(new Color(50, 60, 80));
-        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(80, 120, 180), 2));
-        return scrollPane;
+        JScrollPane scrollPaneHoaDon = new JScrollPane(tableHoaDon);
+        scrollPaneHoaDon.setBackground(new Color(50, 60, 80));
+        scrollPaneHoaDon.setBorder(BorderFactory.createLineBorder(new Color(80, 120, 180), 2));
+
+        return scrollPaneHoaDon;
     }
 
     private JPanel buildReportPanel() {
@@ -535,6 +542,30 @@ public class HoaDonManagementPanel extends JPanel {
         tableHoaDon.clearSelection();
     }
 
+    private void openManageDetails() {
+        String ma = txtMaHoaDon.getText().trim();
+        if (ma.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Chọn hoặc nhập chung Hóa Đơn và ấn Cập Nhật/Lưu trước khi Quản Lý Món", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        HoaDon hd = controller.getHoaDonById(ma);
+        if (hd == null) {
+            JOptionPane.showMessageDialog(this, "Hóa Đơn không tồn tại trên hệ thống. Hãy Lưu trước!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Window win = SwingUtilities.getWindowAncestor(this);
+        Frame owner = null;
+        if (win instanceof Frame) {
+            owner = (Frame) win; }
+        
+        HoaDonChiTietDialog dialog = new HoaDonChiTietDialog(owner, ma, controller, () -> {
+            refreshHoaDonTable();
+            loadOrderToForm(); // reload to get new TongTien
+        });
+        dialog.setVisible(true);
+    }
+
     private void showAllOrders() {
         updateReportTable(
                 new String[] { "Mã", "Ngày", "Khách Hàng", "Tổng Tiền" },
@@ -545,7 +576,7 @@ public class HoaDonManagementPanel extends JPanel {
                                 h.getKhachHang() != null ? h.getKhachHang().getTenKhachHang() : "",
                                 h.getTongTien()
                         })
-                        .toArray(Object[][]::new));
+                        .toArray(size -> new Object[size][]));
     }
 
     private void showRevenueByCustomer() {
@@ -557,7 +588,7 @@ public class HoaDonManagementPanel extends JPanel {
                         m.get("tenKhachHang"),
                         m.get("tongDoanhThu")
                 })
-                .toArray(Object[][]::new);
+                .toArray(size -> new Object[size][]);
         updateReportTable(columns, rows);
     }
 
@@ -571,7 +602,7 @@ public class HoaDonManagementPanel extends JPanel {
                         m.get("ten"),
                         m.get("tongSoLuong")
                 })
-                .toArray(Object[][]::new);
+                .toArray(size -> new Object[size][]);
         updateReportTable(columns, rows);
     }
 
