@@ -8,7 +8,7 @@ import java.awt.*;
  */
 public class MainFrame extends JFrame {
     public MainFrame(HoaDonManagementPanel panel) {
-        setTitle("☕ Hệ Thống Quản Lý Bán Hàng Café ");
+        setTitle("☕ Hệ Thống Quản Lý Bán Hàng Cafe ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1400, 800);
         setLocationRelativeTo(null);
