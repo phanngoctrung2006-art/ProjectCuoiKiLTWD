@@ -19,11 +19,11 @@ public class HoaDonController {
     private final com.cafe.service.ChiTietHoaDonService chiTietHoaDonService;
     private final com.cafe.service.ThucUongService thucUongService;
 
-    public HoaDonController(HoaDonService hoaDonService, 
-                           KhachHangService khachHangService,
-                           ReportService reportService,
-                           com.cafe.service.ChiTietHoaDonService chiTietHoaDonService,
-                           com.cafe.service.ThucUongService thucUongService) {
+    public HoaDonController(HoaDonService hoaDonService,
+            KhachHangService khachHangService,
+            ReportService reportService,
+            com.cafe.service.ChiTietHoaDonService chiTietHoaDonService,
+            com.cafe.service.ThucUongService thucUongService) {
         this.hoaDonService = hoaDonService;
         this.khachHangService = khachHangService;
         this.reportService = reportService;
@@ -37,7 +37,8 @@ public class HoaDonController {
         java.math.BigDecimal tongTien = java.math.BigDecimal.ZERO;
         for (com.cafe.model.entity.ChiTietHoaDon c : details) {
             if (c.getThucUong() != null && c.getThucUong().getGia() != null) {
-                java.math.BigDecimal thanhTien = c.getThucUong().getGia().multiply(new java.math.BigDecimal(c.getSoLuong()));
+                java.math.BigDecimal thanhTien = c.getThucUong().getGia()
+                        .multiply(new java.math.BigDecimal(c.getSoLuong()));
                 tongTien = tongTien.add(thanhTien);
             }
         }
@@ -56,7 +57,7 @@ public class HoaDonController {
         // Prepare Entities
         HoaDon hd = hoaDonService.getById(maHoaDon);
         com.cafe.model.entity.ThucUong tu = thucUongService.getById(maThucUong);
-        
+
         // Prevent duplication
         List<com.cafe.model.entity.ChiTietHoaDon> current = chiTietHoaDonService.findByMaHoaDon(maHoaDon);
         com.cafe.model.entity.ChiTietHoaDon existing = null;
@@ -66,7 +67,7 @@ public class HoaDonController {
                 break;
             }
         }
-        
+
         if (existing != null) {
             existing.setSoLuong(existing.getSoLuong() + soLuong);
             chiTietHoaDonService.update(existing); // Update via merge
@@ -74,10 +75,10 @@ public class HoaDonController {
             com.cafe.model.entity.ChiTietHoaDon chiTiet = new com.cafe.model.entity.ChiTietHoaDon(hd, tu, soLuong);
             chiTietHoaDonService.create(chiTiet);
         }
-        
+
         calculateAndUpdateTongTien(maHoaDon);
     }
-    
+
     public void deleteThucUongFromHoaDon(String maHoaDon, String maThucUong) {
         chiTietHoaDonService.delete(new com.cafe.model.entity.ChiTietHoaDonId(maHoaDon, maThucUong));
         calculateAndUpdateTongTien(maHoaDon);
@@ -206,4 +207,3 @@ public class HoaDonController {
         return reportService.q15_orderWithMostDetails();
     }
 }
-

@@ -155,6 +155,10 @@ public class HoaDonChiTietDialog extends JDialog {
         try {
             controller.addThucUongToHoaDon(maHoaDon, maThucUong, soLuong);
             loadData();
+            // Gọi callback để cập nhật parent
+            if (onCloseCallback != null) {
+                onCloseCallback.run();
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
@@ -170,6 +174,10 @@ public class HoaDonChiTietDialog extends JDialog {
         try {
             controller.deleteThucUongFromHoaDon(maHoaDon, maThucUong);
             loadData();
+            // Gọi callback để cập nhật parent
+            if (onCloseCallback != null) {
+                onCloseCallback.run();
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }

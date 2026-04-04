@@ -29,6 +29,8 @@ public class HoaDonManagementPanel extends JPanel {
     private DefaultTableModel modelReport;
     private BufferedImage backgroundImage;
 
+    private HoaDonChiTietDialog hoaDonChiTiet;
+
     public HoaDonManagementPanel(HoaDonController controller) {
         this.controller = controller;
         loadBackgroundImage();
@@ -300,11 +302,40 @@ public class HoaDonManagementPanel extends JPanel {
             }
         });
 
+        tableHoaDon.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                // Optional: Only trigger on double-click
+                if (e.getClickCount() == 2) {
+                    int row = tableHoaDon.getSelectedRow();
+                    if (row != -1) {
+                        String id = (String) tableHoaDon.getValueAt(row, 0);
+                        showChiTietHoaDon(id);
+                    }
+                }
+            }
+        });
+
         JScrollPane scrollPaneHoaDon = new JScrollPane(tableHoaDon);
         scrollPaneHoaDon.setBackground(new Color(50, 60, 80));
         scrollPaneHoaDon.setBorder(BorderFactory.createLineBorder(new Color(80, 120, 180), 2));
 
         return scrollPaneHoaDon;
+    }
+
+    private void showChiTietHoaDon(String idHoaDon) {
+        // Truyền callback để cập nhật bảng khi đóng dialog
+        hoaDonChiTiet = new HoaDonChiTietDialog(null, idHoaDon, controller, () -> {
+            loadData();
+            // Tìm và chọn lại hóa đơn vừa cập nhật
+            for (int i = 0; i < modelHoaDon.getRowCount(); i++) {
+                if (modelHoaDon.getValueAt(i, 0).toString().equals(idHoaDon)) {
+                    tableHoaDon.setRowSelectionInterval(i, i);
+                    break;
+                }
+            }
+        });
+        hoaDonChiTiet.setVisible(true);
     }
 
     private JPanel buildReportPanel() {
@@ -444,7 +475,7 @@ public class HoaDonManagementPanel extends JPanel {
             hd.setNgayLap(Date.valueOf(ngay));
             hd.setTongTien(new java.math.BigDecimal(tien));
             hd.setKhachHang(kh);
-            
+
             String ghiChu = txtGhiChu.getText().trim();
             hd.setGhiChu(ghiChu);
 
@@ -492,7 +523,7 @@ public class HoaDonManagementPanel extends JPanel {
                 }
             }
             hd.setKhachHang(kh);
-            
+
             String ghiChu = txtGhiChu.getText().trim();
             hd.setGhiChu(ghiChu);
 
@@ -545,20 +576,23 @@ public class HoaDonManagementPanel extends JPanel {
     private void openManageDetails() {
         String ma = txtMaHoaDon.getText().trim();
         if (ma.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Chọn hoặc nhập chung Hóa Đơn và ấn Cập Nhật/Lưu trước khi Quản Lý Món", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Chọn hoặc nhập chung Hóa Đơn và ấn Cập Nhật/Lưu trước khi Quản Lý Món",
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         HoaDon hd = controller.getHoaDonById(ma);
         if (hd == null) {
-            JOptionPane.showMessageDialog(this, "Hóa Đơn không tồn tại trên hệ thống. Hãy Lưu trước!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Hóa Đơn không tồn tại trên hệ thống. Hãy Lưu trước!", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         Window win = SwingUtilities.getWindowAncestor(this);
         Frame owner = null;
         if (win instanceof Frame) {
-            owner = (Frame) win; }
-        
+            owner = (Frame) win;
+        }
+
         HoaDonChiTietDialog dialog = new HoaDonChiTietDialog(owner, ma, controller, () -> {
             refreshHoaDonTable();
             loadOrderToForm(); // reload to get new TongTien
