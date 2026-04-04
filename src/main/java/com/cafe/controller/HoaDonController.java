@@ -79,6 +79,10 @@ public class HoaDonController {
         return khachHangService.findByName(name);
     }
 
+    public KhachHang getKhachHangByPhone(String phone) {
+        return khachHangService.findByPhone(phone);
+    }
+
     // ===== Báo Cáo - 15 Queries =====
     public List<HoaDon> reportAllHoaDonWithCustomer() {
         return reportService.q01_getAllHoaDonWithCustomer();

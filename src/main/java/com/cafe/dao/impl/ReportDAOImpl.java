@@ -1,4 +1,5 @@
 package com.cafe.dao.impl;
+
 import com.cafe.dao.ReportDAO;
 import com.cafe.model.entity.HoaDon;
 import com.cafe.model.entity.KhachHang;
@@ -53,9 +54,9 @@ public class ReportDAOImpl implements ReportDAO {
         } catch (NonUniqueResultException e) {
             // Nếu có nhiều kết quả, lấy kết quả đầu tiên
             List<HoaDon> results = em.createQuery(
-                "SELECT h FROM HoaDon h WHERE h.MaHoaDon = :ma", HoaDon.class)
-                .setParameter("ma", ma.trim())
-                .getResultList();
+                    "SELECT h FROM HoaDon h WHERE h.MaHoaDon = :ma", HoaDon.class)
+                    .setParameter("ma", ma.trim())
+                    .getResultList();
             return results.isEmpty() ? null : results.get(0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,7 +75,7 @@ public class ReportDAOImpl implements ReportDAO {
         EntityManager em = HibernateUtil.getEntityManager();
         try {
             String jpql = "SELECT DISTINCT h FROM HoaDon h " +
-                    "LEFT JOIN FETCH h.KhachHang k " +
+                    "JOIN h.KhachHang k " +
                     "WHERE LOWER(k.TenKhachHang) LIKE LOWER(:name) " +
                     "ORDER BY h.NgayLap DESC";
             return em.createQuery(jpql, HoaDon.class)
@@ -124,7 +125,8 @@ public class ReportDAOImpl implements ReportDAO {
                     "GROUP BY k.MaKhachHang, k.TenKhachHang " +
                     "ORDER BY COALESCE(SUM(h.TongTien), 0) DESC";
             @SuppressWarnings("unchecked")
-            List<Map<String, Object>> result = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class).getResultList();
+            List<Map<String, Object>> result = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class)
+                    .getResultList();
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,7 +149,8 @@ public class ReportDAOImpl implements ReportDAO {
                     "GROUP BY YEAR(h.NgayLap), MONTH(h.NgayLap) " +
                     "ORDER BY YEAR(h.NgayLap) DESC, MONTH(h.NgayLap) DESC";
             @SuppressWarnings("unchecked")
-            List<Map<String, Object>> result = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class).getResultList();
+            List<Map<String, Object>> result = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class)
+                    .getResultList();
             return result;
         } catch (Exception e) {
             // Fallback: thử với FUNCTION()
@@ -160,7 +163,8 @@ public class ReportDAOImpl implements ReportDAO {
                         "GROUP BY FUNCTION('YEAR', h.NgayLap), FUNCTION('MONTH', h.NgayLap) " +
                         "ORDER BY FUNCTION('YEAR', h.NgayLap) DESC, FUNCTION('MONTH', h.NgayLap) DESC";
                 @SuppressWarnings("unchecked")
-                List<Map<String, Object>> result = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class).getResultList();
+                List<Map<String, Object>> result = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class)
+                        .getResultList();
                 return result;
             } catch (Exception e2) {
                 e2.printStackTrace();
@@ -183,7 +187,8 @@ public class ReportDAOImpl implements ReportDAO {
                     "GROUP BY t.MaThucUong, t.TenThucUong " +
                     "ORDER BY COALESCE(SUM(c.SoLuong), 0) DESC";
             @SuppressWarnings("unchecked")
-            List<Map<String, Object>> result = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class).getResultList();
+            List<Map<String, Object>> result = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class)
+                    .getResultList();
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -206,7 +211,8 @@ public class ReportDAOImpl implements ReportDAO {
                     "GROUP BY t.MaThucUong, t.TenThucUong, t.Gia " +
                     "ORDER BY COALESCE(SUM(c.SoLuong * t.Gia), 0) DESC";
             @SuppressWarnings("unchecked")
-            List<Map<String, Object>> result = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class).getResultList();
+            List<Map<String, Object>> result = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class)
+                    .getResultList();
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -296,7 +302,7 @@ public class ReportDAOImpl implements ReportDAO {
         EntityManager em = HibernateUtil.getEntityManager();
         try {
             String jpql = "SELECT k FROM KhachHang k " +
-                    "WHERE k NOT IN (SELECT DISTINCT h.KhachHang FROM HoaDon h) " +
+                    "WHERE k.MaKhachHang NOT IN (SELECT DISTINCT h.KhachHang.MaKhachHang FROM HoaDon h WHERE h.KhachHang IS NOT NULL) " +
                     "ORDER BY k.TenKhachHang";
             return em.createQuery(jpql, KhachHang.class).getResultList();
         } catch (Exception e) {
@@ -312,14 +318,13 @@ public class ReportDAOImpl implements ReportDAO {
         EntityManager em = HibernateUtil.getEntityManager();
         try {
             String jpql = "SELECT new map(h.MaHoaDon as ma, " +
-                    "COUNT(c) as soDongChiTiet) " +
+                    "COUNT(c.ThucUong) as soDongChiTiet) " +
                     "FROM HoaDon h " +
                     "LEFT JOIN h.DanhSachChiTietHoaDon c " +
                     "GROUP BY h.MaHoaDon " +
-                    "ORDER BY COUNT(c) DESC";
+                    "ORDER BY COUNT(c.ThucUong) DESC";
             List<Map<String, Object>> results = (List<Map<String, Object>>) (List<?>) em.createQuery(jpql, Map.class)
-                    .setMaxResults(1)
-                    .getResultList();
+                    .setMaxResults(1).getResultList();
             return results.isEmpty() ? new HashMap<>() : results.get(0);
         } catch (Exception e) {
             e.printStackTrace();

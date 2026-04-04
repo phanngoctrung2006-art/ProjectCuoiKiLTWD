@@ -14,12 +14,12 @@ public class ChiTietHoaDon {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("MaHoaDon")
-    @JoinColumn(name = "MaHoaDon")
+    @JoinColumn(name = "MaHoaDon", columnDefinition = "CHAR(5)")
     private HoaDon HoaDon;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("MaThucUong")
-    @JoinColumn(name = "MaThucUong")
+    @JoinColumn(name = "MaThucUong", columnDefinition = "CHAR(5)")
     private ThucUong ThucUong;
 
     @Column(name = "SoLuong")

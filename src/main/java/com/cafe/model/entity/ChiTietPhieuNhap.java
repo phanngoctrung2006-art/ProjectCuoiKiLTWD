@@ -15,12 +15,12 @@ public class ChiTietPhieuNhap {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("MaPhieuNhap")
-    @JoinColumn(name = "MaPhieuNhap")
+    @JoinColumn(name = "MaPhieuNhap", columnDefinition = "CHAR(5)")
     private PhieuNhap PhieuNhap;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("MaNguyenLieu")
-    @JoinColumn(name = "MaNguyenLieu")
+    @JoinColumn(name = "MaNguyenLieu", columnDefinition = "CHAR(5)")
     private NguyenLieu NguyenLieu;
 
     @Column(name = "SoLuong")

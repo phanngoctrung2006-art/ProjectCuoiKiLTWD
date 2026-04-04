@@ -22,6 +22,9 @@ public class HoaDon {
     @Column(name = "TongTien", precision = 10, scale = 2)
     private BigDecimal TongTien;
 
+    @Column(name = "GhiChu", length = 255)
+    private String GhiChu;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaKhachHang")
     private KhachHang KhachHang;
@@ -77,6 +80,14 @@ public class HoaDon {
 
     public void setTongTien(BigDecimal TongTien) {
         this.TongTien = TongTien;
+    }
+
+    public String getGhiChu() {
+        return GhiChu;
+    }
+
+    public void setGhiChu(String GhiChu) {
+        this.GhiChu = GhiChu;
     }
 
     public KhachHang getKhachHang() {
