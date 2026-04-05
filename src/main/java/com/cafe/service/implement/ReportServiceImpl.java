@@ -9,9 +9,6 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Implementation của ReportService - 15 câu truy vấn JPQL.
- */
 public class ReportServiceImpl implements ReportService {
     private final ReportDAO reportDAO;
 
@@ -24,21 +21,15 @@ public class ReportServiceImpl implements ReportService {
         return reportDAO.q01_getAllHoaDonWithCustomer();
     }
 
-
-
     @Override
     public List<Map<String, Object>> q05_revenueByCustomer() {
         return reportDAO.q05_revenueByCustomer();
     }
 
-
-
     @Override
     public List<Map<String, Object>> q07_topSellingProducts() {
         return reportDAO.q07_topSellingProducts();
     }
-
-
 
     @Override
     public long q09_countTotalOrders() {
@@ -64,6 +55,5 @@ public class ReportServiceImpl implements ReportService {
     public BigDecimal q13_totalRevenue() {
         return reportDAO.q13_totalRevenue();
     }
-
 
 }

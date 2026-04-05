@@ -3,9 +3,6 @@ package com.cafe.view;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Main Frame - sử dụng JTabbedPane để chứa tất cả panel quản lý.
- */
 public class MainFrame extends JFrame {
 
     public MainFrame(HoaDonManagementPanel hoaDonPanel,

@@ -2,9 +2,6 @@ package com.cafe.model.entity;
 
 import jakarta.persistence.*;
 
-/**
- * Entity map với bảng ChiTietHoaDon trong cơ sở dữ liệu.
- */
 @Entity
 @Table(name = "ChiTietHoaDon")
 public class ChiTietHoaDon {
@@ -25,7 +22,6 @@ public class ChiTietHoaDon {
     @Column(name = "SoLuong")
     private Integer SoLuong;
 
-    // Constructors
     public ChiTietHoaDon() {}
 
     public ChiTietHoaDon(HoaDon HoaDon, ThucUong ThucUong, Integer SoLuong) {
@@ -35,7 +31,6 @@ public class ChiTietHoaDon {
         this.Id = new ChiTietHoaDonId(HoaDon.getMaHoaDon(), ThucUong.getMaThucUong());
     }
 
-    // Getters and Setters
     public ChiTietHoaDonId getId() {
         return Id;
     }

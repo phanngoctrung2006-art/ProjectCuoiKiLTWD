@@ -6,9 +6,6 @@ import com.cafe.service.HoaDonService;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Implementation của HoaDonService.
- */
 public class HoaDonServiceImpl implements HoaDonService {
     private final HoaDonDAO hoaDonDAO;
 

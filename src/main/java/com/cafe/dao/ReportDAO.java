@@ -7,9 +7,6 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * DAO interface cho báo cáo - 15 câu truy vấn JPQL.
- */
 public interface ReportDAO {
     List<HoaDon> q01_getAllHoaDonWithCustomer();
 

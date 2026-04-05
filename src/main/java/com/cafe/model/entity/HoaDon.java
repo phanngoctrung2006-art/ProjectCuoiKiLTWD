@@ -5,9 +5,6 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
-/**
- * Entity map với bảng HoaDon trong cơ sở dữ liệu.
- */
 @Entity
 @Table(name = "HoaDon")
 public class HoaDon {
@@ -44,7 +41,6 @@ public class HoaDon {
     @OneToMany(mappedBy = "HoaDon", cascade = CascadeType.ALL)
     private List<ChiTietHoaDon> DanhSachChiTietHoaDon;
 
-    // Constructors
     public HoaDon() {}
 
     public HoaDon(String MaHoaDon, Date NgayLap, BigDecimal TongTien, KhachHang KhachHang, Ban Ban, PhuongThucThanhToan PhuongThucThanhToan, NhanVien NhanVien) {
@@ -57,7 +53,6 @@ public class HoaDon {
         this.NhanVien = NhanVien;
     }
 
-    // Getters and Setters
     public String getMaHoaDon() {
         return MaHoaDon;
     }

@@ -3,9 +3,6 @@ package com.cafe.model.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
-/**
- * Entity map với bảng ChiTietPhieuNhap trong cơ sở dữ liệu.
- */
 @Entity
 @Table(name = "ChiTietPhieuNhap")
 public class ChiTietPhieuNhap {
@@ -29,7 +26,6 @@ public class ChiTietPhieuNhap {
     @Column(name = "Gia", precision = 10, scale = 2)
     private BigDecimal Gia;
 
-    // Constructors
     public ChiTietPhieuNhap() {}
 
     public ChiTietPhieuNhap(PhieuNhap PhieuNhap, NguyenLieu NguyenLieu, Integer SoLuong, BigDecimal Gia) {
@@ -40,7 +36,6 @@ public class ChiTietPhieuNhap {
         this.Id = new ChiTietPhieuNhapId(PhieuNhap.getMaPhieuNhap(), NguyenLieu.getMaNguyenLieu());
     }
 
-    // Getters and Setters
     public ChiTietPhieuNhapId getId() {
         return Id;
     }

@@ -9,9 +9,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class implementation của PhieuNhapDAO.
- */
 public class PhieuNhapDAOImpl extends GenericDAOImpl<PhieuNhap, String> implements PhieuNhapDAO {
 
     public PhieuNhapDAOImpl() {

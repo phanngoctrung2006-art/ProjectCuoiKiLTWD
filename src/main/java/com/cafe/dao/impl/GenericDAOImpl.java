@@ -8,13 +8,6 @@ import jakarta.persistence.EntityTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class thực thi (Implementation) cho GenericDAO.
- * Cung cấp các hàm CRUD cơ bản sử dụng JPA EntityManager.
- *
- * @param <T>  Kiểu Entity
- * @param <ID> Kiểu khóa chính
- */
 public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
     private final Class<T> entityClass;
@@ -23,9 +16,6 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
         this.entityClass = entityClass;
     }
 
-    /**
-     * Lấy class của Entity (dùng cho các lớp con).
-     */
     protected Class<T> getEntityClass() {
         return entityClass;
     }

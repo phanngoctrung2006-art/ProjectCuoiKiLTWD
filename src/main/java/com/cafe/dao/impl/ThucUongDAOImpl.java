@@ -9,9 +9,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class implementation của ThucUongDAO.
- */
 public class ThucUongDAOImpl extends GenericDAOImpl<ThucUong, String> implements ThucUongDAO {
 
     public ThucUongDAOImpl() {

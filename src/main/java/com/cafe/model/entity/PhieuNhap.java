@@ -5,9 +5,6 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
-/**
- * Entity map với bảng PhieuNhap trong cơ sở dữ liệu.
- */
 @Entity
 @Table(name = "PhieuNhap")
 public class PhieuNhap {
@@ -33,7 +30,6 @@ public class PhieuNhap {
     @OneToMany(mappedBy = "PhieuNhap", cascade = CascadeType.ALL)
     private List<ChiTietPhieuNhap> DanhSachChiTietPhieuNhap;
 
-    // Constructors
     public PhieuNhap() {}
 
     public PhieuNhap(String MaPhieuNhap, Date NgayNhap, BigDecimal TongTien, NhanVien NhanVien, NhaCungCap NhaCungCap) {
@@ -44,7 +40,6 @@ public class PhieuNhap {
         this.NhaCungCap = NhaCungCap;
     }
 
-    // Getters and Setters
     public String getMaPhieuNhap() {
         return MaPhieuNhap;
     }

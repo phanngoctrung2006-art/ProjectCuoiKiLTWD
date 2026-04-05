@@ -8,9 +8,6 @@ import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class implementation của NguyenLieuDAO.
- */
 public class NguyenLieuDAOImpl extends GenericDAOImpl<NguyenLieu, String> implements NguyenLieuDAO {
 
     public NguyenLieuDAOImpl() {

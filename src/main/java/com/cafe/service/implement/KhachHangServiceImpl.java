@@ -5,9 +5,6 @@ import com.cafe.model.entity.KhachHang;
 import com.cafe.service.KhachHangService;
 import java.util.List;
 
-/**
- * Implementation của KhachHangService.
- */
 public class KhachHangServiceImpl implements KhachHangService {
     private final KhachHangDAO khachHangDAO;
 

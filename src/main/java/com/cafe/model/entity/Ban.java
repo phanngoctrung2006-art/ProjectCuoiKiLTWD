@@ -3,9 +3,6 @@ package com.cafe.model.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
-/**
- * Entity map với bảng Ban trong cơ sở dữ liệu.
- */
 @Entity
 @Table(name = "Ban")
 public class Ban {
@@ -17,14 +14,12 @@ public class Ban {
     @OneToMany(mappedBy = "Ban", cascade = CascadeType.ALL)
     private List<HoaDon> DanhSachHoaDon;
 
-    // Constructors
     public Ban() {}
 
     public Ban(String MaBan) {
         this.MaBan = MaBan;
     }
 
-    // Getters and Setters
     public String getMaBan() {
         return MaBan;
     }

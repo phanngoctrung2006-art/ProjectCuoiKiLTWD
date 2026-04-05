@@ -10,9 +10,6 @@ import jakarta.persistence.EntityTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class implementation của ChiTietHoaDonDAO.
- */
 public class ChiTietHoaDonDAOImpl extends GenericDAOImpl<ChiTietHoaDon, ChiTietHoaDonId> implements ChiTietHoaDonDAO {
 
     public ChiTietHoaDonDAOImpl() {

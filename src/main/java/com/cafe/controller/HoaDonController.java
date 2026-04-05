@@ -9,9 +9,6 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Controller cho quản lý hóa đơn.
- */
 public class HoaDonController {
     private final HoaDonService hoaDonService;
     private final KhachHangService khachHangService;
@@ -31,7 +28,7 @@ public class HoaDonController {
         this.thucUongService = thucUongService;
     }
 
-    // ===== Tính tổng tiền hóa đơn =====
+    // Tính tổng tiền hóa đơn
     public void calculateAndUpdateTongTien(String maHoaDon) {
         List<com.cafe.model.entity.ChiTietHoaDon> details = chiTietHoaDonService.findByMaHoaDon(maHoaDon);
         java.math.BigDecimal tongTien = java.math.BigDecimal.ZERO;
@@ -84,7 +81,7 @@ public class HoaDonController {
         calculateAndUpdateTongTien(maHoaDon);
     }
 
-    // ===== CRUD Hóa Đơn =====
+    // CRUD Hóa Đơn
     public List<HoaDon> getAllHoaDon() {
         return hoaDonService.getAll();
     }
@@ -113,7 +110,7 @@ public class HoaDonController {
         return chiTietHoaDonService.findByMaHoaDon(maHoaDon);
     }
 
-    // ===== Quản lý Khách Hàng =====
+    // Quản lý Khách Hàng
     public List<KhachHang> getAllKhachHang() {
         return khachHangService.getAll();
     }
@@ -146,24 +143,18 @@ public class HoaDonController {
         return khachHangService.findByPhone(phone);
     }
 
-    // ===== Báo Cáo - 15 Queries =====
+    // Báo Cáo
     public List<HoaDon> reportAllHoaDonWithCustomer() {
         return reportService.q01_getAllHoaDonWithCustomer();
     }
-
-
 
     public List<Map<String, Object>> reportRevenueByCustomer() {
         return reportService.q05_revenueByCustomer();
     }
 
-
-
     public List<Map<String, Object>> reportTopSellingProducts() {
         return reportService.q07_topSellingProducts();
     }
-
-
 
     public long reportCountTotalOrders() {
         return reportService.q09_countTotalOrders();
@@ -184,6 +175,5 @@ public class HoaDonController {
     public java.math.BigDecimal reportTotalRevenue() {
         return reportService.q13_totalRevenue();
     }
-
 
 }

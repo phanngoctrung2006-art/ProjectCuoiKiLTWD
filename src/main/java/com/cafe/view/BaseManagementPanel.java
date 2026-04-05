@@ -9,9 +9,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Lớp cơ sở cho các panel quản lý CRUD với tìm kiếm real-time.
- */
 public abstract class BaseManagementPanel extends JPanel {
 
     protected JTable table;
@@ -31,7 +28,7 @@ public abstract class BaseManagementPanel extends JPanel {
         setBackground(BG_DARK);
     }
 
-    // ===== Factory helpers =====
+    // Factory helpers
 
     protected JPanel makeHeader(String title) {
         JPanel panel = new JPanel() {
@@ -111,7 +108,6 @@ public abstract class BaseManagementPanel extends JPanel {
         return sp;
     }
 
-    /** Gắn DocumentListener vào một danh sách text fields để filter realtime */
     protected void attachSearchListeners(JTextField... fields) {
         DocumentListener dl = new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e)  { if (!isUpdatingForm) applyFilter(); }

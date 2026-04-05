@@ -14,9 +14,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-/**
- * Implementation của ReportDAO - 15 câu truy vấn JPQL.
- */
 public class ReportDAOImpl implements ReportDAO {
 
     @Override
@@ -34,8 +31,6 @@ public class ReportDAOImpl implements ReportDAO {
             em.close();
         }
     }
-
-
 
     @Override
     public List<Map<String, Object>> q05_revenueByCustomer() {
@@ -60,8 +55,6 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
-
-
     @Override
     public List<Map<String, Object>> q07_topSellingProducts() {
         EntityManager em = HibernateUtil.getEntityManager();
@@ -84,8 +77,6 @@ public class ReportDAOImpl implements ReportDAO {
             em.close();
         }
     }
-
-
 
     @Override
     public long q09_countTotalOrders() {
@@ -161,6 +152,5 @@ public class ReportDAOImpl implements ReportDAO {
             em.close();
         }
     }
-
 
 }

@@ -3,9 +3,6 @@ package com.cafe.model.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
-/**
- * Entity map với bảng LoaiThucUong trong cơ sở dữ liệu.
- */
 @Entity
 @Table(name = "LoaiThucUong")
 public class LoaiThucUong {
@@ -20,7 +17,6 @@ public class LoaiThucUong {
     @OneToMany(mappedBy = "LoaiThucUong", cascade = CascadeType.ALL)
     private List<ThucUong> DanhSachThucUong;
 
-    // Constructors
     public LoaiThucUong() {}
 
     public LoaiThucUong(String MaLoai, String TenLoaiThucUong) {
@@ -28,7 +24,6 @@ public class LoaiThucUong {
         this.TenLoaiThucUong = TenLoaiThucUong;
     }
 
-    // Getters and Setters
     public String getMaLoai() {
         return MaLoai;
     }

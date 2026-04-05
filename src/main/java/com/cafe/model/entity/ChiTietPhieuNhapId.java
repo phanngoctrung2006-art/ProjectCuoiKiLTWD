@@ -5,9 +5,6 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * Khóa chính phức hợp cho bảng ChiTietPhieuNhap.
- */
 @Embeddable
 public class ChiTietPhieuNhapId implements Serializable {
 
@@ -24,7 +21,6 @@ public class ChiTietPhieuNhapId implements Serializable {
         this.MaNguyenLieu = MaNguyenLieu;
     }
 
-    // Getters and Setters
     public String getMaPhieuNhap() {
         return MaPhieuNhap;
     }

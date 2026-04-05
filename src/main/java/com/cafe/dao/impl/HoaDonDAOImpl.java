@@ -9,9 +9,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class implementation của HoaDonDAO.
- */
 public class HoaDonDAOImpl extends GenericDAOImpl<HoaDon, String> implements HoaDonDAO {
 
     public HoaDonDAOImpl() {

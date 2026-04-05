@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Entity map với bảng ThucUong trong cơ sở dữ liệu.
- */
 @Entity
 @Table(name = "ThucUong")
 public class ThucUong {
@@ -25,11 +22,9 @@ public class ThucUong {
     @JoinColumn(name = "MaLoai")
     private LoaiThucUong LoaiThucUong;
 
-
     @OneToMany(mappedBy = "ThucUong", cascade = CascadeType.ALL)
     private List<ChiTietHoaDon> DanhSachChiTietHoaDon;
 
-    // Constructors
     public ThucUong() {}
 
     public ThucUong(String MaThucUong, String TenThucUong, BigDecimal Gia, LoaiThucUong LoaiThucUong) {
@@ -39,7 +34,6 @@ public class ThucUong {
         this.LoaiThucUong = LoaiThucUong;
     }
 
-    // Getters and Setters
     public String getMaThucUong() {
         return MaThucUong;
     }
@@ -71,7 +65,6 @@ public class ThucUong {
     public void setLoaiThucUong(LoaiThucUong LoaiThucUong) {
         this.LoaiThucUong = LoaiThucUong;
     }
-
 
     public List<ChiTietHoaDon> getDanhSachChiTietHoaDon() {
         return DanhSachChiTietHoaDon;

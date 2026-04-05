@@ -16,9 +16,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Panel quản lý hóa đơn - CRUD và Báo cáo.
- */
 public class HoaDonManagementPanel extends JPanel {
     private final HoaDonController controller;
     private JTextField txtMaHoaDon;
@@ -69,7 +66,7 @@ public class HoaDonManagementPanel extends JPanel {
     private void initComponents() {
         setLayout(new BorderLayout(0, 0));
         setOpaque(true);
-        setBackground(new Color(20, 25, 35)); // Màu đen đậm - modern style
+        setBackground(new Color(20, 25, 35)); // Màu đen đậm  modern style
 
         // Header Panel với gradient
         JPanel headerPanel = createHeaderPanel();
@@ -327,7 +324,7 @@ public class HoaDonManagementPanel extends JPanel {
             }
         });
 
-        // Gắn listener tìm kiếm real-time
+        // Gắn listener tìm kiếm realtime
         setupSearchListeners();
 
         JScrollPane scrollPaneHoaDon = new JScrollPane(tableHoaDon);
@@ -337,7 +334,6 @@ public class HoaDonManagementPanel extends JPanel {
         return scrollPaneHoaDon;
     }
 
-    /** Gắn DocumentListener để lọc bảng tự động khi gõ vào ô */
     private void setupSearchListeners() {
         DocumentListener dl = new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e)  { if (!isUpdatingForm) applyFilter(); }
@@ -352,7 +348,6 @@ public class HoaDonManagementPanel extends JPanel {
         txtGhiChu.getDocument().addDocumentListener(dl);
     }
 
-    /** Áp dụng bộ lọc dựa trên nội dung các ô */
     private void applyFilter() {
         if (sorterHoaDon == null) return;
         java.util.List<RowFilter<Object, Object>> filters = new java.util.ArrayList<>();
@@ -373,7 +368,6 @@ public class HoaDonManagementPanel extends JPanel {
         }
     }
 
-    /** Kích hoạt chế độ tìm kiếm: xóa trắng các ô và bật lọc */
     private void activateSearch() {
         isUpdatingForm = true;
         txtMaHoaDon.setText("");
@@ -517,7 +511,7 @@ public class HoaDonManagementPanel extends JPanel {
 
             KhachHang kh = controller.getKhachHangByPhone(soDienThoai);
             if (kh == null) {
-                // Nếu không tìm thấy khách hàng, có thể tạo mới hoặc thông báo lỗi
+                // Nếu không tìm thấy khách hàng có thể tạo mới hoặc thông báo lỗi
                 int confirm = JOptionPane.showConfirmDialog(this,
                         "Khách hàng không tồn tại. Bạn có muốn tạo mới không?",
                         "Xác nhận", JOptionPane.YES_NO_OPTION);
@@ -642,7 +636,7 @@ public class HoaDonManagementPanel extends JPanel {
         txtSoDienThoai.setText("");
         tableHoaDon.clearSelection();
         isUpdatingForm = false;
-        // Reset bộ lọc -> hiển thị lại tất cả hóa đơn
+        // Reset bộ lọc > hiển thị lại tất cả hóa đơn
         if (sorterHoaDon != null) sorterHoaDon.setRowFilter(null);
     }
 

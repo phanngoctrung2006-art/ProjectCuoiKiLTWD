@@ -8,9 +8,6 @@ import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class implementation của KhachHangDAO.
- */
 public class KhachHangDAOImpl extends GenericDAOImpl<KhachHang, String> implements KhachHangDAO {
 
     public KhachHangDAOImpl() {
