@@ -1,9 +1,7 @@
 package com.cafe.dao;
 
 import com.cafe.model.entity.HoaDon;
-import com.cafe.model.entity.KhachHang;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 

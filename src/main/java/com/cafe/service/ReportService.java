@@ -1,7 +1,6 @@
 package com.cafe.service;
 
 import com.cafe.model.entity.HoaDon;
-import com.cafe.model.entity.KhachHang;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;

@@ -2,16 +2,11 @@ package com.cafe.dao.impl;
 
 import com.cafe.dao.ReportDAO;
 import com.cafe.model.entity.HoaDon;
-import com.cafe.model.entity.KhachHang;
 import com.cafe.util.HibernateUtil;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.NonUniqueResultException;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
 
 public class ReportDAOImpl implements ReportDAO {
