@@ -16,20 +16,7 @@ public interface ReportService {
      */
     List<HoaDon> q01_getAllHoaDonWithCustomer();
 
-    /**
-     * Q2: Tìm hóa đơn theo mã.
-     */
-    HoaDon q02_findHoaDonByMa(String ma);
 
-    /**
-     * Q3: Tìm hóa đơn theo tên khách hàng.
-     */
-    List<HoaDon> q03_findHoaDonByCustomerName(String name);
-
-    /**
-     * Q4: Tìm hóa đơn trong khoảng ngày.
-     */
-    List<HoaDon> q04_findHoaDonBetweenDates(java.sql.Date fromDate, java.sql.Date toDate);
 
     // Nhóm B - Thống kê sản phẩm
     /**
@@ -37,20 +24,14 @@ public interface ReportService {
      */
     List<Map<String, Object>> q05_revenueByCustomer();
 
-    /**
-     * Q6: Tính doanh thu theo tháng.
-     */
-    List<Map<String, Object>> q06_revenueByMonth();
+
 
     /**
      * Q7: Lấy sản phẩm bán chạy nhất.
      */
     List<Map<String, Object>> q07_topSellingProducts();
 
-    /**
-     * Q8: Lấy sản phẩm có doanh thu cao nhất.
-     */
-    List<Map<String, Object>> q08_topRevenueProducts();
+
 
     /**
      * Q9: Đếm số lượng hóa đơn.
@@ -77,13 +58,5 @@ public interface ReportService {
      */
     BigDecimal q13_totalRevenue();
 
-    /**
-     * Q14: Khách hàng chưa từng mua hàng.
-     */
-    List<KhachHang> q14_customersWithoutOrders();
 
-    /**
-     * Q15: Hóa đơn có chi tiết nhiều nhất.
-     */
-    Map<String, Object> q15_orderWithMostDetails();
 }

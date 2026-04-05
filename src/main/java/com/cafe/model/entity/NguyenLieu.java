@@ -20,8 +20,6 @@ public class NguyenLieu {
     @Column(name = "SoLuong")
     private Integer SoLuong;
 
-    @OneToMany(mappedBy = "NguyenLieu", cascade = CascadeType.ALL)
-    private List<ChiTietCongThuc> DanhSachChiTietCongThuc;
 
     @OneToMany(mappedBy = "NguyenLieu", cascade = CascadeType.ALL)
     private List<ChiTietPhieuNhap> DanhSachChiTietPhieuNhap;
@@ -60,13 +58,6 @@ public class NguyenLieu {
         this.SoLuong = SoLuong;
     }
 
-    public List<ChiTietCongThuc> getDanhSachChiTietCongThuc() {
-        return DanhSachChiTietCongThuc;
-    }
-
-    public void setDanhSachChiTietCongThuc(List<ChiTietCongThuc> DanhSachChiTietCongThuc) {
-        this.DanhSachChiTietCongThuc = DanhSachChiTietCongThuc;
-    }
 
     public List<ChiTietPhieuNhap> getDanhSachChiTietPhieuNhap() {
         return DanhSachChiTietPhieuNhap;

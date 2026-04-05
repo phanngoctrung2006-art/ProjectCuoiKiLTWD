@@ -151,33 +151,19 @@ public class HoaDonController {
         return reportService.q01_getAllHoaDonWithCustomer();
     }
 
-    public HoaDon reportFindHoaDonByMa(String ma) {
-        return reportService.q02_findHoaDonByMa(ma);
-    }
 
-    public List<HoaDon> reportFindHoaDonByCustomerName(String name) {
-        return reportService.q03_findHoaDonByCustomerName(name);
-    }
-
-    public List<HoaDon> reportFindHoaDonBetweenDates(Date fromDate, Date toDate) {
-        return reportService.q04_findHoaDonBetweenDates(fromDate, toDate);
-    }
 
     public List<Map<String, Object>> reportRevenueByCustomer() {
         return reportService.q05_revenueByCustomer();
     }
 
-    public List<Map<String, Object>> reportRevenueByMonth() {
-        return reportService.q06_revenueByMonth();
-    }
+
 
     public List<Map<String, Object>> reportTopSellingProducts() {
         return reportService.q07_topSellingProducts();
     }
 
-    public List<Map<String, Object>> reportTopRevenueProducts() {
-        return reportService.q08_topRevenueProducts();
-    }
+
 
     public long reportCountTotalOrders() {
         return reportService.q09_countTotalOrders();
@@ -199,11 +185,5 @@ public class HoaDonController {
         return reportService.q13_totalRevenue();
     }
 
-    public List<KhachHang> reportCustomersWithoutOrders() {
-        return reportService.q14_customersWithoutOrders();
-    }
 
-    public Map<String, Object> reportOrderWithMostDetails() {
-        return reportService.q15_orderWithMostDetails();
-    }
 }

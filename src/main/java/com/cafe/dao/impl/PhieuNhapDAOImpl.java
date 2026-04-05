@@ -54,45 +54,4 @@ public class PhieuNhapDAOImpl extends GenericDAOImpl<PhieuNhap, String> implemen
             em.close();
         }
     }
-
-    @Override
-    public List<PhieuNhap> findByNgayNhapBetween(Date tuNgay, Date denNgay) {
-        EntityManager em = HibernateUtil.getEntityManager();
-        try {
-            String jpql = "SELECT DISTINCT pn FROM PhieuNhap pn " +
-                    "LEFT JOIN FETCH pn.NhanVien " +
-                    "LEFT JOIN FETCH pn.NhaCungCap " +
-                    "WHERE pn.NgayNhap BETWEEN :tuNgay AND :denNgay " +
-                    "ORDER BY pn.NgayNhap DESC";
-            return em.createQuery(jpql, PhieuNhap.class)
-                    .setParameter("tuNgay", tuNgay)
-                    .setParameter("denNgay", denNgay)
-                    .getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        } finally {
-            em.close();
-        }
-    }
-
-    @Override
-    public List<PhieuNhap> findByMaNhaCungCap(String maNhaCungCap) {
-        EntityManager em = HibernateUtil.getEntityManager();
-        try {
-            String jpql = "SELECT DISTINCT pn FROM PhieuNhap pn " +
-                    "LEFT JOIN FETCH pn.NhanVien " +
-                    "LEFT JOIN FETCH pn.NhaCungCap " +
-                    "WHERE pn.NhaCungCap.MaNhaCungCap = :maNCC " +
-                    "ORDER BY pn.NgayNhap DESC";
-            return em.createQuery(jpql, PhieuNhap.class)
-                    .setParameter("maNCC", maNhaCungCap)
-                    .getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        } finally {
-            em.close();
-        }
-    }
 }

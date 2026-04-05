@@ -24,40 +24,21 @@ public class ReportServiceImpl implements ReportService {
         return reportDAO.q01_getAllHoaDonWithCustomer();
     }
 
-    @Override
-    public HoaDon q02_findHoaDonByMa(String ma) {
-        return reportDAO.q02_findHoaDonByMa(ma);
-    }
 
-    @Override
-    public List<HoaDon> q03_findHoaDonByCustomerName(String name) {
-        return reportDAO.q03_findHoaDonByCustomerName(name);
-    }
-
-    @Override
-    public List<HoaDon> q04_findHoaDonBetweenDates(Date fromDate, Date toDate) {
-        return reportDAO.q04_findHoaDonBetweenDates(fromDate, toDate);
-    }
 
     @Override
     public List<Map<String, Object>> q05_revenueByCustomer() {
         return reportDAO.q05_revenueByCustomer();
     }
 
-    @Override
-    public List<Map<String, Object>> q06_revenueByMonth() {
-        return reportDAO.q06_revenueByMonth();
-    }
+
 
     @Override
     public List<Map<String, Object>> q07_topSellingProducts() {
         return reportDAO.q07_topSellingProducts();
     }
 
-    @Override
-    public List<Map<String, Object>> q08_topRevenueProducts() {
-        return reportDAO.q08_topRevenueProducts();
-    }
+
 
     @Override
     public long q09_countTotalOrders() {
@@ -84,13 +65,5 @@ public class ReportServiceImpl implements ReportService {
         return reportDAO.q13_totalRevenue();
     }
 
-    @Override
-    public List<KhachHang> q14_customersWithoutOrders() {
-        return reportDAO.q14_customersWithoutOrders();
-    }
 
-    @Override
-    public Map<String, Object> q15_orderWithMostDetails() {
-        return reportDAO.q15_orderWithMostDetails();
-    }
 }

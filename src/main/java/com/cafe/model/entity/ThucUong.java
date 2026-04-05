@@ -25,8 +25,6 @@ public class ThucUong {
     @JoinColumn(name = "MaLoai")
     private LoaiThucUong LoaiThucUong;
 
-    @OneToMany(mappedBy = "ThucUong", cascade = CascadeType.ALL)
-    private List<CongThuc> DanhSachCongThuc;
 
     @OneToMany(mappedBy = "ThucUong", cascade = CascadeType.ALL)
     private List<ChiTietHoaDon> DanhSachChiTietHoaDon;
@@ -74,13 +72,6 @@ public class ThucUong {
         this.LoaiThucUong = LoaiThucUong;
     }
 
-    public List<CongThuc> getDanhSachCongThuc() {
-        return DanhSachCongThuc;
-    }
-
-    public void setDanhSachCongThuc(List<CongThuc> DanhSachCongThuc) {
-        this.DanhSachCongThuc = DanhSachCongThuc;
-    }
 
     public List<ChiTietHoaDon> getDanhSachChiTietHoaDon() {
         return DanhSachChiTietHoaDon;
