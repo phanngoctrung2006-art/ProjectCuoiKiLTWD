@@ -5,6 +5,9 @@ import com.cafe.model.entity.HoaDon;
 import com.cafe.model.entity.KhachHang;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -28,6 +31,8 @@ public class HoaDonManagementPanel extends JPanel {
     private DefaultTableModel modelHoaDon;
     private DefaultTableModel modelReport;
     private BufferedImage backgroundImage;
+    private TableRowSorter<DefaultTableModel> sorterHoaDon;
+    private boolean isUpdatingForm = false;
 
     private HoaDonChiTietDialog hoaDonChiTiet;
 
@@ -227,6 +232,7 @@ public class HoaDonManagementPanel extends JPanel {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
         panel.setBackground(new Color(35, 45, 60));
 
+        JButton btnSearch = createModernButton("Tìm Kiếm", new Color(0, 150, 136));
         JButton btnNew = createModernButton("Mới", new Color(76, 175, 80));
         JButton btnSave = createModernButton("Lưu", new Color(33, 150, 243));
         JButton btnUpdate = createModernButton("Cập Nhật", new Color(255, 152, 0));
@@ -234,13 +240,15 @@ public class HoaDonManagementPanel extends JPanel {
         JButton btnRefresh = createModernButton("Làm Mới", new Color(156, 39, 176));
         JButton btnManageDetails = createModernButton("Quản Lý Món", new Color(30, 200, 180));
 
+        btnSearch.addActionListener(e -> activateSearch());
         btnNew.addActionListener(e -> clearForm());
         btnSave.addActionListener(e -> saveHoaDon());
         btnUpdate.addActionListener(e -> updateHoaDon());
         btnDelete.addActionListener(e -> deleteHoaDon());
-        btnRefresh.addActionListener(e -> loadData());
+        btnRefresh.addActionListener(e -> { clearForm(); loadData(); });
         btnManageDetails.addActionListener(e -> openManageDetails());
 
+        panel.add(btnSearch);
         panel.add(btnNew);
         panel.add(btnSave);
         panel.add(btnUpdate);
@@ -283,6 +291,9 @@ public class HoaDonManagementPanel extends JPanel {
         };
 
         tableHoaDon = new JTable(modelHoaDon);
+        sorterHoaDon = new TableRowSorter<>(modelHoaDon);
+        tableHoaDon.setRowSorter(sorterHoaDon);
+
         tableHoaDon.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         tableHoaDon.setRowHeight(28);
         tableHoaDon.setBackground(new Color(50, 60, 80));
@@ -305,22 +316,76 @@ public class HoaDonManagementPanel extends JPanel {
         tableHoaDon.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                // Optional: Only trigger on double-click
                 if (e.getClickCount() == 2) {
                     int row = tableHoaDon.getSelectedRow();
                     if (row != -1) {
-                        String id = (String) tableHoaDon.getValueAt(row, 0);
+                        int modelRow = tableHoaDon.convertRowIndexToModel(row);
+                        String id = (String) modelHoaDon.getValueAt(modelRow, 0);
                         showChiTietHoaDon(id);
                     }
                 }
             }
         });
 
+        // Gắn listener tìm kiếm real-time
+        setupSearchListeners();
+
         JScrollPane scrollPaneHoaDon = new JScrollPane(tableHoaDon);
         scrollPaneHoaDon.setBackground(new Color(50, 60, 80));
         scrollPaneHoaDon.setBorder(BorderFactory.createLineBorder(new Color(80, 120, 180), 2));
 
         return scrollPaneHoaDon;
+    }
+
+    /** Gắn DocumentListener để lọc bảng tự động khi gõ vào ô */
+    private void setupSearchListeners() {
+        DocumentListener dl = new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e)  { if (!isUpdatingForm) applyFilter(); }
+            @Override public void removeUpdate(DocumentEvent e)  { if (!isUpdatingForm) applyFilter(); }
+            @Override public void changedUpdate(DocumentEvent e) { if (!isUpdatingForm) applyFilter(); }
+        };
+        txtMaHoaDon.getDocument().addDocumentListener(dl);
+        txtNgayLap.getDocument().addDocumentListener(dl);
+        txtTenKhachHang.getDocument().addDocumentListener(dl);
+        txtSoDienThoai.getDocument().addDocumentListener(dl);
+        txtTongTien.getDocument().addDocumentListener(dl);
+        txtGhiChu.getDocument().addDocumentListener(dl);
+    }
+
+    /** Áp dụng bộ lọc dựa trên nội dung các ô */
+    private void applyFilter() {
+        if (sorterHoaDon == null) return;
+        java.util.List<RowFilter<Object, Object>> filters = new java.util.ArrayList<>();
+        addFilter(filters, txtMaHoaDon.getText(), 0);
+        addFilter(filters, txtNgayLap.getText(), 1);
+        addFilter(filters, txtTenKhachHang.getText(), 2);
+        addFilter(filters, txtSoDienThoai.getText(), 3);
+        addFilter(filters, txtTongTien.getText(), 4);
+        addFilter(filters, txtGhiChu.getText(), 5);
+        sorterHoaDon.setRowFilter(filters.isEmpty() ? null : RowFilter.andFilter(filters));
+    }
+
+    private void addFilter(java.util.List<RowFilter<Object, Object>> filters, String text, int col) {
+        String t = text.trim();
+        if (!t.isEmpty()) {
+            try { filters.add(RowFilter.regexFilter("(?i)" + java.util.regex.Pattern.quote(t), col)); }
+            catch (Exception ignored) {}
+        }
+    }
+
+    /** Kích hoạt chế độ tìm kiếm: xóa trắng các ô và bật lọc */
+    private void activateSearch() {
+        isUpdatingForm = true;
+        txtMaHoaDon.setText("");
+        txtNgayLap.setText("");
+        txtTenKhachHang.setText("");
+        txtSoDienThoai.setText("");
+        txtTongTien.setEditable(true);  // Mở khóa để có thể tìm theo tổng tiền
+        txtTongTien.setText("");
+        txtGhiChu.setText("");
+        tableHoaDon.clearSelection();
+        isUpdatingForm = false;
+        applyFilter();
     }
 
     private void showChiTietHoaDon(String idHoaDon) {
@@ -417,19 +482,22 @@ public class HoaDonManagementPanel extends JPanel {
 
     private void loadOrderToForm() {
         int row = tableHoaDon.getSelectedRow();
-        if (row == -1)
-            return;
+        if (row == -1) return;
 
-        String maHoaDon = tableHoaDon.getValueAt(row, 0).toString();
+        // Chuyển view index sang model index (quan trọng khi đang filter)
+        int modelRow = tableHoaDon.convertRowIndexToModel(row);
+        String maHoaDon = modelHoaDon.getValueAt(modelRow, 0).toString();
         HoaDon hd = controller.getHoaDonById(maHoaDon);
 
         if (hd != null) {
+            isUpdatingForm = true;
             txtMaHoaDon.setText(hd.getMaHoaDon());
             txtNgayLap.setText(hd.getNgayLap().toString());
             txtTongTien.setText(hd.getTongTien().toString());
             txtTenKhachHang.setText(hd.getKhachHang() != null ? hd.getKhachHang().getTenKhachHang() : "");
             txtSoDienThoai.setText(hd.getKhachHang() != null ? hd.getKhachHang().getSoDienThoai() : "");
             txtGhiChu.setText(hd.getGhiChu() != null ? hd.getGhiChu() : "");
+            isUpdatingForm = false;
         }
     }
 
@@ -564,13 +632,18 @@ public class HoaDonManagementPanel extends JPanel {
     }
 
     private void clearForm() {
+        isUpdatingForm = true;
         txtMaHoaDon.setText("");
         txtNgayLap.setText(LocalDate.now().toString());
+        txtTongTien.setEditable(false);  // Khóa lại sau khi thoát chế độ tìm kiếm
         txtTongTien.setText("0");
         txtGhiChu.setText("");
         txtTenKhachHang.setText("");
         txtSoDienThoai.setText("");
         tableHoaDon.clearSelection();
+        isUpdatingForm = false;
+        // Reset bộ lọc -> hiển thị lại tất cả hóa đơn
+        if (sorterHoaDon != null) sorterHoaDon.setRowFilter(null);
     }
 
     private void openManageDetails() {

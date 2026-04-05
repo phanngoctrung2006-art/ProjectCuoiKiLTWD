@@ -3,49 +3,59 @@ package com.cafe;
 import com.cafe.controller.HoaDonController;
 import com.cafe.dao.*;
 import com.cafe.dao.impl.*;
-import com.cafe.service.HoaDonService;
-import com.cafe.service.KhachHangService;
-
-import com.cafe.service.ReportService;
-import com.cafe.service.implement.HoaDonServiceImpl;
-import com.cafe.service.implement.KhachHangServiceImpl;
-import com.cafe.service.implement.ReportServiceImpl;
-import com.cafe.view.HoaDonManagementPanel;
-import com.cafe.view.MainFrame;
+import com.cafe.service.*;
+import com.cafe.service.implement.*;
+import com.cafe.view.*;
 import javax.swing.*;
 
 /**
- * Entry point cho ứng dụng Quản Lý Bán Hàng Café
+ * Entry point cho ứng dụng Quản Lý Bán Hàng Café.
  */
 public class AppLauncher {
     public static void main(String[] args) {
-        // Khởi tạo DAO Layer
-        HoaDonDAO hoaDonDAO = new HoaDonDAOImpl();
-        KhachHangDAO khachHangDAO = new KhachHangDAOImpl();
-        ReportDAO reportDAO = new ReportDAOImpl();
+
+        // ========== DAO Layer ==========
+        HoaDonDAO        hoaDonDAO        = new HoaDonDAOImpl();
+        KhachHangDAO     khachHangDAO     = new KhachHangDAOImpl();
+        ReportDAO        reportDAO        = new ReportDAOImpl();
         ChiTietHoaDonDAO chiTietHoaDonDAO = new ChiTietHoaDonDAOImpl();
-        com.cafe.dao.ThucUongDAO thucUongDAO = new com.cafe.dao.impl.ThucUongDAOImpl();
+        ThucUongDAO      thucUongDAO      = new ThucUongDAOImpl();
+        NhanVienDAO      nhanVienDAO      = new NhanVienDAOImpl();
+        NguyenLieuDAO    nguyenLieuDAO    = new NguyenLieuDAOImpl();
+        NhaCungCapDAO    nhaCungCapDAO    = new NhaCungCapDAOImpl();
+        PhieuNhapDAO     phieuNhapDAO     = new PhieuNhapDAOImpl();
 
-        // Khởi tạo Service Layer
-        HoaDonService hoaDonService = new HoaDonServiceImpl(hoaDonDAO);
-        KhachHangService khachHangService = new KhachHangServiceImpl(khachHangDAO);
-        ReportService reportService = new ReportServiceImpl(reportDAO);
-        com.cafe.service.ChiTietHoaDonService chiTietHoaDonService = new com.cafe.service.implement.ChiTietHoaDonServiceImpl(chiTietHoaDonDAO);
-        com.cafe.service.ThucUongService thucUongService = new com.cafe.service.implement.ThucUongServiceImpl(thucUongDAO);
+        // ========== Service Layer ==========
+        HoaDonService        hoaDonService        = new HoaDonServiceImpl(hoaDonDAO);
+        KhachHangService     khachHangService     = new KhachHangServiceImpl(khachHangDAO);
+        ReportService        reportService        = new ReportServiceImpl(reportDAO);
+        ChiTietHoaDonService chiTietHoaDonService = new ChiTietHoaDonServiceImpl(chiTietHoaDonDAO);
+        ThucUongService      thucUongService      = new ThucUongServiceImpl(thucUongDAO);
+        NhanVienService      nhanVienService      = new NhanVienServiceImpl(nhanVienDAO);
+        NguyenLieuService    nguyenLieuService    = new NguyenLieuServiceImpl(nguyenLieuDAO);
+        NhaCungCapService    nhaCungCapService    = new NhaCungCapServiceImpl(nhaCungCapDAO);
+        PhieuNhapService     phieuNhapService     = new PhieuNhapServiceImpl(phieuNhapDAO);
 
-        // Khởi tạo Controller
+        // ========== Controller ==========
         HoaDonController hoaDonController = new HoaDonController(
-            hoaDonService,
-            khachHangService,
-            reportService,
-            chiTietHoaDonService,
-            thucUongService
+                hoaDonService, khachHangService, reportService,
+                chiTietHoaDonService, thucUongService
         );
 
-        // Khởi tạo UI
+        // ========== UI ==========
         SwingUtilities.invokeLater(() -> {
-            HoaDonManagementPanel panel = new HoaDonManagementPanel(hoaDonController);
-            MainFrame frame = new MainFrame(panel);
+            HoaDonManagementPanel hoaDonPanel     = new HoaDonManagementPanel(hoaDonController);
+            NhanVienPanel         nhanVienPanel   = new NhanVienPanel(nhanVienService);
+            ThucUongPanel         thucUongPanel   = new ThucUongPanel(thucUongService);
+            PhieuNhapPanel        phieuNhapPanel  = new PhieuNhapPanel(phieuNhapService, nhanVienService, nhaCungCapService);
+            NguyenLieuPanel       nguyenLieuPanel = new NguyenLieuPanel(nguyenLieuService);
+            NhaCungCapPanel       nhaCungCapPanel  = new NhaCungCapPanel(nhaCungCapService);
+            KhachHangPanel        khachHangPanel  = new KhachHangPanel(khachHangService);
+
+            MainFrame frame = new MainFrame(
+                    hoaDonPanel, nhanVienPanel, thucUongPanel,
+                    phieuNhapPanel, nguyenLieuPanel, nhaCungCapPanel, khachHangPanel
+            );
             frame.setVisible(true);
         });
     }
