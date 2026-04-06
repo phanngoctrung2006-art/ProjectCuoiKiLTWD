@@ -302,7 +302,7 @@ public class HoaDonManagementPanel extends JPanel {
         tableHoaDon.getTableHeader().setPreferredSize(new Dimension(0, 30));
 
         tableHoaDon.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && tableHoaDon.getSelectedRow() != -1) {
+            if (!e.getValueIsAdjusting() && !isUpdatingForm && tableHoaDon.getSelectedRow() != -1) {
                 loadOrderToForm();
             }
         });
@@ -380,21 +380,11 @@ public class HoaDonManagementPanel extends JPanel {
     }
 
     private void showChiTietHoaDon(String idHoaDon) {
-        // Truyền callback để cập nhật bảng khi đóng dialog
-        hoaDonChiTiet = new HoaDonChiTietDialog(null, idHoaDon, controller, () -> {
-            loadData();
-            // Tìm và chọn lại hóa đơn vừa cập nhật
-            for (int i = 0; i < modelHoaDon.getRowCount(); i++) {
-                if (modelHoaDon.getValueAt(i, 0).toString().equals(idHoaDon)) {
-                    int viewIndex = tableHoaDon.convertRowIndexToView(i);
-                    if (viewIndex >= 0) {
-                        tableHoaDon.setRowSelectionInterval(viewIndex, viewIndex);
-                    }
-                    break;
-                }
-            }
-        });
+        hoaDonChiTiet = new HoaDonChiTietDialog(null, idHoaDon, controller);
         hoaDonChiTiet.setVisible(true);
+        
+        // Sau khi Dialog (modal) đóng: refresh bảng + cập nhật form, không dùng setSelection để tránh trùng dòng
+        SwingUtilities.invokeLater(() -> refreshTableAndUpdateForm(idHoaDon));
     }
 
     private JPanel buildReportPanel() {
@@ -468,7 +458,7 @@ public class HoaDonManagementPanel extends JPanel {
         for (HoaDon hd : list) {
             if (hd != null && hd.getMaHoaDon() != null && !hd.getMaHoaDon().trim().isEmpty()) {
                 modelHoaDon.addRow(new Object[] {
-                        hd.getMaHoaDon(),
+                        hd.getMaHoaDon().trim(),
                         hd.getNgayLap(),
                         hd.getKhachHang() != null ? hd.getKhachHang().getTenKhachHang() : "",
                         hd.getKhachHang() != null ? hd.getKhachHang().getSoDienThoai() : "",
@@ -491,6 +481,24 @@ public class HoaDonManagementPanel extends JPanel {
         if (hd != null) {
             isUpdatingForm = true;
             txtMaHoaDon.setText(hd.getMaHoaDon());
+            txtNgayLap.setText(hd.getNgayLap().toString());
+            txtTongTien.setText(hd.getTongTien().toString());
+            txtTenKhachHang.setText(hd.getKhachHang() != null ? hd.getKhachHang().getTenKhachHang() : "");
+            txtSoDienThoai.setText(hd.getKhachHang() != null ? hd.getKhachHang().getSoDienThoai() : "");
+            txtGhiChu.setText(hd.getGhiChu() != null ? hd.getGhiChu() : "");
+            isUpdatingForm = false;
+        }
+    }
+
+    /**
+     * Tải dữ liệu hóa đơn trực tiếp từ database lên form mà không thông qua lựa chọn trên bảng.
+     * Dùng để đảm bảo form luôn hiển thị số liệu mới nhất ngay cả khi bảng đang bị filter.
+     */
+    private void loadOrderToFormById(String id) {
+        HoaDon hd = controller.getHoaDonById(id);
+        if (hd != null) {
+            isUpdatingForm = true;
+            txtMaHoaDon.setText(hd.getMaHoaDon().trim());
             txtNgayLap.setText(hd.getNgayLap().toString());
             txtTongTien.setText(hd.getTongTien().toString());
             txtTenKhachHang.setText(hd.getKhachHang() != null ? hd.getKhachHang().getTenKhachHang() : "");
@@ -665,20 +673,11 @@ public class HoaDonManagementPanel extends JPanel {
             owner = (Frame) win;
         }
 
-        HoaDonChiTietDialog dialog = new HoaDonChiTietDialog(owner, ma, controller, () -> {
-            refreshHoaDonTable();
-            // Tìm và chọn lại hóa đơn vừa cập nhật (sẽ tự động trigger loadOrderToForm)
-            for (int i = 0; i < modelHoaDon.getRowCount(); i++) {
-                if (modelHoaDon.getValueAt(i, 0).toString().equals(ma)) {
-                    int viewIndex = tableHoaDon.convertRowIndexToView(i);
-                    if (viewIndex >= 0) {
-                        tableHoaDon.setRowSelectionInterval(viewIndex, viewIndex);
-                    }
-                    break;
-                }
-            }
-        });
+        HoaDonChiTietDialog dialog = new HoaDonChiTietDialog(owner, ma, controller);
         dialog.setVisible(true);
+
+        // Sau khi Dialog (modal) đóng: refresh bảng + cập nhật form, không dùng setSelection để tránh trùng dòng
+        SwingUtilities.invokeLater(() -> refreshTableAndUpdateForm(ma));
     }
 
     private void showAllOrders() {
@@ -743,6 +742,35 @@ public class HoaDonManagementPanel extends JPanel {
         modelReport.setRowCount(0);
         for (Object[] row : data) {
             modelReport.addRow(row);
+        }
+    }
+
+    /**
+     * Refresh lại bảng hóa đơn từ DB và cập nhật form theo maHoaDon được chỉ định.
+     * KHÔNG dùng setSelectionInterval để tránh trigger listener gây trùng dòng.
+     */
+    private void refreshTableAndUpdateForm(String maHoaDon) {
+        // 1. Refresh bảng (xóa + nạp lại từ DB)
+        refreshHoaDonTable();
+
+        // 2. Cập nhật form trực tiếp từ DB (không qua selection listener)
+        loadOrderToFormById(maHoaDon);
+
+        // 3. Cuộn đến dòng tương ứng, tắt listener trước khi chọn dòng
+        String searchId = maHoaDon.trim();
+        for (int i = 0; i < modelHoaDon.getRowCount(); i++) {
+            String rowId = modelHoaDon.getValueAt(i, 0).toString().trim();
+            if (rowId.equals(searchId)) {
+                int viewIndex = tableHoaDon.convertRowIndexToView(i);
+                if (viewIndex >= 0 && viewIndex < tableHoaDon.getRowCount()) {
+                    // Tắt listener trước khi setSelection để tránh trigger loadOrderToForm lần nữa
+                    isUpdatingForm = true;
+                    tableHoaDon.getSelectionModel().setSelectionInterval(viewIndex, viewIndex);
+                    tableHoaDon.scrollRectToVisible(tableHoaDon.getCellRect(viewIndex, 0, true));
+                    isUpdatingForm = false;
+                }
+                break;
+            }
         }
     }
 }

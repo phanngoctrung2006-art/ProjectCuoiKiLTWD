@@ -59,4 +59,18 @@ public class KhachHang {
     public void setDanhSachHoaDon(List<HoaDon> DanhSachHoaDon) {
         this.DanhSachHoaDon = DanhSachHoaDon;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        KhachHang khachHang = (KhachHang) o;
+        return java.util.Objects.equals(MaKhachHang != null ? MaKhachHang.trim() : null, 
+                                        khachHang.MaKhachHang != null ? khachHang.MaKhachHang.trim() : null);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(MaKhachHang != null ? MaKhachHang.trim() : null);
+    }
 }

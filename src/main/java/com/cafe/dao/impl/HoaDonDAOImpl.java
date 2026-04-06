@@ -24,7 +24,8 @@ public class HoaDonDAOImpl extends GenericDAOImpl<HoaDon, String> implements Hoa
                     "LEFT JOIN FETCH h.PhuongThucThanhToan " +
                     "LEFT JOIN FETCH h.NhanVien " +
                     "ORDER BY h.NgayLap DESC";
-            return em.createQuery(jpql, HoaDon.class).getResultList();
+            List<HoaDon> results = em.createQuery(jpql, HoaDon.class).getResultList();
+            return new java.util.ArrayList<>(new java.util.LinkedHashSet<>(results));
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();

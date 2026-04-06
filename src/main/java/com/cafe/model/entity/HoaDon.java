@@ -124,4 +124,18 @@ public class HoaDon {
     public void setDanhSachChiTietHoaDon(List<ChiTietHoaDon> DanhSachChiTietHoaDon) {
         this.DanhSachChiTietHoaDon = DanhSachChiTietHoaDon;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HoaDon hoaDon = (HoaDon) o;
+        return java.util.Objects.equals(MaHoaDon != null ? MaHoaDon.trim() : null, 
+                                        hoaDon.MaHoaDon != null ? hoaDon.MaHoaDon.trim() : null);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(MaHoaDon != null ? MaHoaDon.trim() : null);
+    }
 }

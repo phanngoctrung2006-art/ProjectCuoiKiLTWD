@@ -87,14 +87,14 @@ public class NhanVienPanel extends BaseManagementPanel {
     private JPanel buildButtons() {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 4));
         p.setOpaque(false);
+
         JButton bSearch = makeButton("Tìm Kiếm", new Color(0, 150, 136));
-        JButton bNew = makeButton("Làm Mới", new Color(76, 175, 80));
         JButton bSave = makeButton("Lưu", new Color(33, 150, 243));
         JButton bUpdate = makeButton("Cập Nhật", new Color(255, 152, 0));
         JButton bDelete = makeButton("Xóa", new Color(244, 67, 54));
+        JButton bRefresh = makeButton("Làm Mới", new Color(156, 39, 176));
 
         bSearch.addActionListener(e -> activateSearch());
-        bNew.addActionListener(e -> clearForm());
         bSave.addActionListener(e -> doSave());
         bUpdate.addActionListener(e -> doUpdate());
         bDelete.addActionListener(e -> doDelete());
@@ -103,7 +103,12 @@ public class NhanVienPanel extends BaseManagementPanel {
         p.add(bSave);
         p.add(bUpdate);
         p.add(bDelete);
-        p.add(bNew);
+        p.add(bRefresh);
+        p.add(bSearch);
+        p.add(bSave);
+        p.add(bUpdate);
+        p.add(bDelete);
+        p.add(bRefresh);
         return p;
     }
 
