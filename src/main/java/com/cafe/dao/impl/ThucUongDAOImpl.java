@@ -44,4 +44,20 @@ public class ThucUongDAOImpl extends GenericDAOImpl<ThucUong, String> implements
             em.close();
         }
     }
+
+    @Override
+    public String getMaxId() {
+        EntityManager em = HibernateUtil.getEntityManager();
+        try {
+            String jpql = "SELECT t.MaThucUong FROM ThucUong t ORDER BY t.MaThucUong DESC";
+            return em.createQuery(jpql, String.class)
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            em.close();
+        }
+    }
 }
