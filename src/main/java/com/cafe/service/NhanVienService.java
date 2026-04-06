@@ -5,8 +5,14 @@ import java.util.List;
 
 public interface NhanVienService {
     List<NhanVien> getAll();
+
     NhanVien getById(String id);
+
     NhanVien create(NhanVien nhanVien);
+
     NhanVien update(NhanVien nhanVien);
+
     void delete(String id);
+
+    String getNextId();
 }
