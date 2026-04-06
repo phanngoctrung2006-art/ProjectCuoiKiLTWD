@@ -16,12 +16,12 @@ public class NhanVienDAOImpl extends GenericDAOImpl<NhanVien, String> implements
     public String getMaxId() {
         EntityManager em = HibernateUtil.getEntityManager();
         try {
-            String jpql = "SELECT nv.maNhanVien FROM NhanVien nv ORDER BY nv.maNhanVien DESC";
+            String jpql = "SELECT nv.MaNhanVien FROM NhanVien nv ORDER BY nv.MaNhanVien DESC";
             return em.createQuery(jpql, String.class)
                     .setMaxResults(1)
                     .getSingleResult();
         } catch (Exception e) {
-            return null; // nếu chưa có dữ liệu
+            return null;
         } finally {
             em.close();
         }

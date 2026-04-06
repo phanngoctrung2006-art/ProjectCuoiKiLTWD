@@ -88,7 +88,7 @@ public class NhanVienPanel extends BaseManagementPanel {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 4));
         p.setOpaque(false);
         JButton bSearch = makeButton("Tìm Kiếm", new Color(0, 150, 136));
-        JButton bNew = makeButton("Mới", new Color(76, 175, 80));
+        JButton bNew = makeButton("Làm Mới", new Color(76, 175, 80));
         JButton bSave = makeButton("Lưu", new Color(33, 150, 243));
         JButton bUpdate = makeButton("Cập Nhật", new Color(255, 152, 0));
         JButton bDelete = makeButton("Xóa", new Color(244, 67, 54));
@@ -100,10 +100,10 @@ public class NhanVienPanel extends BaseManagementPanel {
         bDelete.addActionListener(e -> doDelete());
 
         p.add(bSearch);
-        p.add(bNew);
         p.add(bSave);
         p.add(bUpdate);
         p.add(bDelete);
+        p.add(bNew);
         return p;
     }
 
@@ -169,6 +169,7 @@ public class NhanVienPanel extends BaseManagementPanel {
     private void doSave() {
         try {
             String ma = service.getNextId();
+
             String ten = txtTen.getText().trim();
             if (ten.isEmpty()) {
                 showError(this, "Tên không được để trống!");
