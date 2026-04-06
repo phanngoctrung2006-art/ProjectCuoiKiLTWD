@@ -63,4 +63,10 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .map(HoaDon::getTongTien)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    @Override
+    public void updateTongTienOnly(String maHoaDon, BigDecimal tongTien) {
+        // Ép kiểu về impl cụ thể để dùng JPQL UPDATE, tránh cascade merge
+        ((com.cafe.dao.impl.HoaDonDAOImpl) hoaDonDAO).updateTongTien(maHoaDon, tongTien);
+    }
 }

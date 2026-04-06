@@ -230,7 +230,6 @@ public class HoaDonManagementPanel extends JPanel {
         panel.setBackground(new Color(35, 45, 60));
 
         JButton btnSearch = createModernButton("Tìm Kiếm", new Color(0, 150, 136));
-        JButton btnNew = createModernButton("Mới", new Color(76, 175, 80));
         JButton btnSave = createModernButton("Lưu", new Color(33, 150, 243));
         JButton btnUpdate = createModernButton("Cập Nhật", new Color(255, 152, 0));
         JButton btnDelete = createModernButton("Xóa", new Color(244, 67, 54));
@@ -238,7 +237,6 @@ public class HoaDonManagementPanel extends JPanel {
         JButton btnManageDetails = createModernButton("Quản Lý Món", new Color(30, 200, 180));
 
         btnSearch.addActionListener(e -> activateSearch());
-        btnNew.addActionListener(e -> clearForm());
         btnSave.addActionListener(e -> saveHoaDon());
         btnUpdate.addActionListener(e -> updateHoaDon());
         btnDelete.addActionListener(e -> deleteHoaDon());
@@ -246,7 +244,6 @@ public class HoaDonManagementPanel extends JPanel {
         btnManageDetails.addActionListener(e -> openManageDetails());
 
         panel.add(btnSearch);
-        panel.add(btnNew);
         panel.add(btnSave);
         panel.add(btnUpdate);
         panel.add(btnDelete);
@@ -389,7 +386,10 @@ public class HoaDonManagementPanel extends JPanel {
             // Tìm và chọn lại hóa đơn vừa cập nhật
             for (int i = 0; i < modelHoaDon.getRowCount(); i++) {
                 if (modelHoaDon.getValueAt(i, 0).toString().equals(idHoaDon)) {
-                    tableHoaDon.setRowSelectionInterval(i, i);
+                    int viewIndex = tableHoaDon.convertRowIndexToView(i);
+                    if (viewIndex >= 0) {
+                        tableHoaDon.setRowSelectionInterval(viewIndex, viewIndex);
+                    }
                     break;
                 }
             }
@@ -460,17 +460,22 @@ public class HoaDonManagementPanel extends JPanel {
     }
 
     private void refreshHoaDonTable() {
+        if (tableHoaDon != null) {
+            tableHoaDon.clearSelection();
+        }
         modelHoaDon.setRowCount(0);
         List<HoaDon> list = controller.getAllHoaDon();
         for (HoaDon hd : list) {
-            modelHoaDon.addRow(new Object[] {
-                    hd.getMaHoaDon(),
-                    hd.getNgayLap(),
-                    hd.getKhachHang() != null ? hd.getKhachHang().getTenKhachHang() : "",
-                    hd.getKhachHang() != null ? hd.getKhachHang().getSoDienThoai() : "",
-                    hd.getTongTien(),
-                    hd.getGhiChu() != null ? hd.getGhiChu() : ""
-            });
+            if (hd != null && hd.getMaHoaDon() != null && !hd.getMaHoaDon().trim().isEmpty()) {
+                modelHoaDon.addRow(new Object[] {
+                        hd.getMaHoaDon(),
+                        hd.getNgayLap(),
+                        hd.getKhachHang() != null ? hd.getKhachHang().getTenKhachHang() : "",
+                        hd.getKhachHang() != null ? hd.getKhachHang().getSoDienThoai() : "",
+                        hd.getTongTien(),
+                        hd.getGhiChu() != null ? hd.getGhiChu() : ""
+                });
+            }
         }
     }
 
@@ -662,7 +667,16 @@ public class HoaDonManagementPanel extends JPanel {
 
         HoaDonChiTietDialog dialog = new HoaDonChiTietDialog(owner, ma, controller, () -> {
             refreshHoaDonTable();
-            loadOrderToForm(); // reload to get new TongTien
+            // Tìm và chọn lại hóa đơn vừa cập nhật (sẽ tự động trigger loadOrderToForm)
+            for (int i = 0; i < modelHoaDon.getRowCount(); i++) {
+                if (modelHoaDon.getValueAt(i, 0).toString().equals(ma)) {
+                    int viewIndex = tableHoaDon.convertRowIndexToView(i);
+                    if (viewIndex >= 0) {
+                        tableHoaDon.setRowSelectionInterval(viewIndex, viewIndex);
+                    }
+                    break;
+                }
+            }
         });
         dialog.setVisible(true);
     }

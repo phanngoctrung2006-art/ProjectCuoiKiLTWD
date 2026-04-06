@@ -36,7 +36,8 @@ public class AppLauncher {
         // Controller
         HoaDonController hoaDonController = new HoaDonController(
                 hoaDonService, khachHangService, reportService,
-                chiTietHoaDonService, thucUongService);
+                chiTietHoaDonService, thucUongService,
+                (com.cafe.dao.impl.ChiTietHoaDonDAOImpl) chiTietHoaDonDAO);
 
         // UI
         SwingUtilities.invokeLater(() -> {

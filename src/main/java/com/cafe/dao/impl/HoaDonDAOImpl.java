@@ -55,4 +55,25 @@ public class HoaDonDAOImpl extends GenericDAOImpl<HoaDon, String> implements Hoa
         }
     }
 
+    /**
+     * Cập nhật chỉ riêng TongTien bằng JPQL UPDATE — tránh cascade merge gây trùng dữ liệu.
+     */
+    public void updateTongTien(String maHoaDon, java.math.BigDecimal tongTien) {
+        EntityManager em = HibernateUtil.getEntityManager();
+        jakarta.persistence.EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.createQuery(
+                "UPDATE HoaDon h SET h.TongTien = :tien WHERE h.MaHoaDon = :ma")
+               .setParameter("tien", tongTien)
+               .setParameter("ma", maHoaDon)
+               .executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
 }

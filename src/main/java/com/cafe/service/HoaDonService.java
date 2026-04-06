@@ -17,4 +17,7 @@ public interface HoaDonService {
     List<HoaDon> findByKhachHangId(String maKhachHang);
 
     java.math.BigDecimal getTotalRevenue();
+
+    /** Cập nhật chỉ TongTien bằng JPQL UPDATE, tránh cascade gây lỗi nhân bản. */
+    void updateTongTienOnly(String maHoaDon, java.math.BigDecimal tongTien);
 }

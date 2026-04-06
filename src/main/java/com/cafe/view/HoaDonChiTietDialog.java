@@ -35,6 +35,16 @@ public class HoaDonChiTietDialog extends JDialog {
 
         setSize(800, 600);
         setLocationRelativeTo(owner);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                if (HoaDonChiTietDialog.this.onCloseCallback != null) {
+                    SwingUtilities.invokeLater(HoaDonChiTietDialog.this.onCloseCallback);
+                }
+            }
+        });
     }
 
     private void initComponents() {
@@ -65,7 +75,12 @@ public class HoaDonChiTietDialog extends JDialog {
         btnAdd.setForeground(Color.WHITE);
         btnAdd.addActionListener(e -> addThucUong());
 
-        JButton btnDelete = new JButton("Xóa Món");
+        JButton btnDecrease = new JButton("Giảm 1");
+        btnDecrease.setBackground(new Color(255, 152, 0));
+        btnDecrease.setForeground(Color.WHITE);
+        btnDecrease.addActionListener(e -> decreaseThucUong());
+
+        JButton btnDelete = new JButton("Xóa Hết");
         btnDelete.setBackground(new Color(244, 67, 54));
         btnDelete.setForeground(Color.WHITE);
         btnDelete.addActionListener(e -> deleteThucUong());
@@ -75,6 +90,7 @@ public class HoaDonChiTietDialog extends JDialog {
         panelTop.add(lblSoLuong);
         panelTop.add(txtSoLuong);
         panelTop.add(btnAdd);
+        panelTop.add(btnDecrease);
         panelTop.add(btnDelete);
 
         // Nửa giữa: Table
@@ -101,7 +117,6 @@ public class HoaDonChiTietDialog extends JDialog {
 
         JButton btnClose = new JButton("Đóng");
         btnClose.addActionListener(e -> {
-            if (onCloseCallback != null) onCloseCallback.run();
             dispose();
         });
 
@@ -155,12 +170,9 @@ public class HoaDonChiTietDialog extends JDialog {
         try {
             controller.addThucUongToHoaDon(maHoaDon, maThucUong, soLuong);
             loadData();
-            // Gọi callback để cập nhật parent
-            if (onCloseCallback != null) {
-                onCloseCallback.run();
-            }
+            JOptionPane.showMessageDialog(this, "Thêm món thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Thêm thất bại: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -174,12 +186,25 @@ public class HoaDonChiTietDialog extends JDialog {
         try {
             controller.deleteThucUongFromHoaDon(maHoaDon, maThucUong);
             loadData();
-            // Gọi callback để cập nhật parent
-            if (onCloseCallback != null) {
-                onCloseCallback.run();
-            }
+            JOptionPane.showMessageDialog(this, "Xóa món thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Xóa thất bại: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void decreaseThucUong() {
+        int row = tableChiTiet.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Chọn một dòng để giảm món!", "Lỗi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String maThucUong = modelChiTiet.getValueAt(row, 0).toString();
+        try {
+            controller.decreaseThucUongFromHoaDon(maHoaDon, maThucUong);
+            loadData();
+            JOptionPane.showMessageDialog(this, "Giảm món thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Giảm thất bại: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -1,10 +1,13 @@
 package com.cafe.controller;
 
+import com.cafe.dao.impl.ChiTietHoaDonDAOImpl;
 import com.cafe.model.entity.HoaDon;
 import com.cafe.model.entity.KhachHang;
 import com.cafe.service.HoaDonService;
 import com.cafe.service.KhachHangService;
 import com.cafe.service.ReportService;
+import com.cafe.service.ThucUongService;
+import com.cafe.service.ChiTietHoaDonService;
 import java.util.List;
 import java.util.Map;
 
@@ -12,75 +15,53 @@ public class HoaDonController {
     private final HoaDonService hoaDonService;
     private final KhachHangService khachHangService;
     private final ReportService reportService;
-    private final com.cafe.service.ChiTietHoaDonService chiTietHoaDonService;
-    private final com.cafe.service.ThucUongService thucUongService;
+    private final ChiTietHoaDonService chiTietHoaDonService;
+    private final ThucUongService thucUongService;
+    private final ChiTietHoaDonDAOImpl chiTietHoaDonDAO;
 
     public HoaDonController(HoaDonService hoaDonService,
             KhachHangService khachHangService,
             ReportService reportService,
-            com.cafe.service.ChiTietHoaDonService chiTietHoaDonService,
-            com.cafe.service.ThucUongService thucUongService) {
+            ChiTietHoaDonService chiTietHoaDonService,
+            ThucUongService thucUongService,
+            ChiTietHoaDonDAOImpl chiTietHoaDonDAO) {
         this.hoaDonService = hoaDonService;
         this.khachHangService = khachHangService;
         this.reportService = reportService;
         this.chiTietHoaDonService = chiTietHoaDonService;
         this.thucUongService = thucUongService;
-    }
-
-    // Tính tổng tiền hóa đơn
-    public void calculateAndUpdateTongTien(String maHoaDon) {
-        List<com.cafe.model.entity.ChiTietHoaDon> details = chiTietHoaDonService.findByMaHoaDon(maHoaDon);
-        java.math.BigDecimal tongTien = java.math.BigDecimal.ZERO;
-        for (com.cafe.model.entity.ChiTietHoaDon c : details) {
-            if (c.getThucUong() != null && c.getThucUong().getGia() != null) {
-                java.math.BigDecimal thanhTien = c.getThucUong().getGia()
-                        .multiply(new java.math.BigDecimal(c.getSoLuong()));
-                tongTien = tongTien.add(thanhTien);
-            }
-        }
-        HoaDon hd = hoaDonService.getById(maHoaDon);
-        if (hd != null) {
-            hd.setTongTien(tongTien);
-            hoaDonService.update(hd);
-        }
+        this.chiTietHoaDonDAO = chiTietHoaDonDAO;
     }
 
     public List<com.cafe.model.entity.ThucUong> getAllThucUong() {
         return thucUongService.getAll();
     }
 
+    /**
+     * Them hoac cap nhat so luong thuc uong trong hoa don.
+     * Toan bo logic nam trong 1 transaction tai DAO — tranh detached entity & cascade bug.
+     */
     public void addThucUongToHoaDon(String maHoaDon, String maThucUong, int soLuong) {
-        // Prepare Entities
-        HoaDon hd = hoaDonService.getById(maHoaDon);
-        com.cafe.model.entity.ThucUong tu = thucUongService.getById(maThucUong);
-
-        // Prevent duplication
-        List<com.cafe.model.entity.ChiTietHoaDon> current = chiTietHoaDonService.findByMaHoaDon(maHoaDon);
-        com.cafe.model.entity.ChiTietHoaDon existing = null;
-        for (com.cafe.model.entity.ChiTietHoaDon c : current) {
-            if (c.getId().getMaThucUong().equals(maThucUong)) {
-                existing = c;
-                break;
-            }
-        }
-
-        if (existing != null) {
-            existing.setSoLuong(existing.getSoLuong() + soLuong);
-            chiTietHoaDonService.update(existing); // Update via merge
-        } else {
-            com.cafe.model.entity.ChiTietHoaDon chiTiet = new com.cafe.model.entity.ChiTietHoaDon(hd, tu, soLuong);
-            chiTietHoaDonService.create(chiTiet);
-        }
-
-        calculateAndUpdateTongTien(maHoaDon);
+        chiTietHoaDonDAO.addOrUpdateChiTiet(maHoaDon, maThucUong, soLuong);
     }
 
+    /**
+     * Xoa thuc uong khoi hoa don va cap nhat tong tien.
+     * Toan bo logic nam trong 1 transaction tai DAO.
+     */
     public void deleteThucUongFromHoaDon(String maHoaDon, String maThucUong) {
-        chiTietHoaDonService.delete(new com.cafe.model.entity.ChiTietHoaDonId(maHoaDon, maThucUong));
-        calculateAndUpdateTongTien(maHoaDon);
+        chiTietHoaDonDAO.deleteChiTietAndRecalculate(maHoaDon, maThucUong);
     }
 
-    // CRUD Hóa Đơn
+    /**
+     * Giam so luong thuc uong di 1.
+     * Neu so luong ve 0 thi xoa han khoi hoa don.
+     */
+    public void decreaseThucUongFromHoaDon(String maHoaDon, String maThucUong) {
+        chiTietHoaDonDAO.decreaseOrRemoveChiTiet(maHoaDon, maThucUong);
+    }
+
+    // CRUD Hoa Don
     public List<HoaDon> getAllHoaDon() {
         return hoaDonService.getAll();
     }
@@ -109,7 +90,7 @@ public class HoaDonController {
         return chiTietHoaDonService.findByMaHoaDon(maHoaDon);
     }
 
-    // Quản lý Khách Hàng
+    // Quan ly Khach Hang
     public List<KhachHang> getAllKhachHang() {
         return khachHangService.getAll();
     }
@@ -142,7 +123,7 @@ public class HoaDonController {
         return khachHangService.findByPhone(phone);
     }
 
-    // Báo Cáo
+    // Bao Cao
     public List<HoaDon> reportAllHoaDonWithCustomer() {
         return reportService.q01_getAllHoaDonWithCustomer();
     }
@@ -174,5 +155,4 @@ public class HoaDonController {
     public java.math.BigDecimal reportTotalRevenue() {
         return reportService.q13_totalRevenue();
     }
-
 }
