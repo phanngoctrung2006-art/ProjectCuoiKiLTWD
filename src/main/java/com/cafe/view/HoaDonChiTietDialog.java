@@ -13,7 +13,6 @@ import java.util.List;
 public class HoaDonChiTietDialog extends JDialog {
     private final HoaDonController controller;
     private final String maHoaDon;
-    private final Runnable onCloseCallback;
 
     private JComboBox<String> comboThucUong;
     private JTextField txtSoLuong;
@@ -23,11 +22,10 @@ public class HoaDonChiTietDialog extends JDialog {
 
     private List<ThucUong> listThucUong;
 
-    public HoaDonChiTietDialog(Frame owner, String maHoaDon, HoaDonController controller, Runnable onCloseCallback) {
+    public HoaDonChiTietDialog(Frame owner, String maHoaDon, HoaDonController controller) {
         super(owner, "Quản Lý Chi Tiết - Hóa Đơn " + maHoaDon, true);
         this.controller = controller;
         this.maHoaDon = maHoaDon;
-        this.onCloseCallback = onCloseCallback;
 
         initComponents();
         loadThucUong();
@@ -36,15 +34,6 @@ public class HoaDonChiTietDialog extends JDialog {
         setSize(800, 600);
         setLocationRelativeTo(owner);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                if (HoaDonChiTietDialog.this.onCloseCallback != null) {
-                    SwingUtilities.invokeLater(HoaDonChiTietDialog.this.onCloseCallback);
-                }
-            }
-        });
     }
 
     private void initComponents() {
