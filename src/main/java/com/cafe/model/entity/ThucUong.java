@@ -18,6 +18,9 @@ public class ThucUong {
     @Column(name = "Gia", precision = 10, scale = 2)
     private BigDecimal Gia;
 
+    @Column(name = "Url", length = 50, nullable = false)
+    private String url;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaLoai")
     private LoaiThucUong LoaiThucUong;
@@ -25,7 +28,8 @@ public class ThucUong {
     @OneToMany(mappedBy = "ThucUong", cascade = CascadeType.ALL)
     private List<ChiTietHoaDon> DanhSachChiTietHoaDon;
 
-    public ThucUong() {}
+    public ThucUong() {
+    }
 
     public ThucUong(String MaThucUong, String TenThucUong, BigDecimal Gia, LoaiThucUong LoaiThucUong) {
         this.MaThucUong = MaThucUong;
@@ -56,6 +60,14 @@ public class ThucUong {
 
     public void setGia(BigDecimal Gia) {
         this.Gia = Gia;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public LoaiThucUong getLoaiThucUong() {

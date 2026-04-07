@@ -13,18 +13,17 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 public class PhieuNhapPanel extends BaseManagementPanel {
-
     private final PhieuNhapService service;
     private final NhanVienService nhanVienService;
     private final NhaCungCapService nhaCungCapService;
 
     private JTextField txtMa, txtNgay, txtTongTien, txtMaNV, txtMaNCC;
 
-    private static final int[] FILTER_COLS = {0, 1, 2, 3};
+    private static final int[] FILTER_COLS = { 0, 1, 2, 3 };
 
     public PhieuNhapPanel(PhieuNhapService service,
-                          NhanVienService nhanVienService,
-                          NhaCungCapService nhaCungCapService) {
+            NhanVienService nhanVienService,
+            NhaCungCapService nhaCungCapService) {
         this.service = service;
         this.nhanVienService = nhanVienService;
         this.nhaCungCapService = nhaCungCapService;
@@ -48,36 +47,51 @@ public class PhieuNhapPanel extends BaseManagementPanel {
         g.insets = new Insets(6, 10, 6, 10);
         g.fill = GridBagConstraints.HORIZONTAL;
 
-        txtMa      = makeField(10);
-        txtNgay    = makeField(12);
-        txtTongTien= makeField(12);
-        txtMaNV    = makeField(10);
-        txtMaNCC   = makeField(10);
+        txtMa = makeField(10);
+        txtNgay = makeField(12);
+        txtTongTien = makeField(12);
+        txtMaNV = makeField(10);
+        txtMaNCC = makeField(10);
         txtTongTien.setEditable(false);
         txtTongTien.setToolTipText("Tổng tiền tự động tính từ chi tiết phiếu nhập");
 
-        g.gridy = 0; g.gridwidth = 1;
-        g.gridx = 0; form.add(makeLabel("Mã Phiếu:"), g);
-        g.gridx = 1; form.add(txtMa, g);
-        g.gridx = 2; form.add(makeLabel("Ngày Nhập:"), g);
-        g.gridx = 3; form.add(txtNgay, g);
+        g.gridy = 0;
+        g.gridwidth = 1;
+        g.gridx = 0;
+        form.add(makeLabel("Mã Phiếu:"), g);
+        g.gridx = 1;
+        form.add(txtMa, g);
+        g.gridx = 2;
+        form.add(makeLabel("Ngày Nhập:"), g);
+        g.gridx = 3;
+        form.add(txtNgay, g);
 
         g.gridy = 1;
-        g.gridx = 0; form.add(makeLabel("Mã NV:"), g);
-        g.gridx = 1; form.add(txtMaNV, g);
-        g.gridx = 2; form.add(makeLabel("Mã NCC:"), g);
-        g.gridx = 3; form.add(txtMaNCC, g);
+        g.gridx = 0;
+        form.add(makeLabel("Mã NV:"), g);
+        g.gridx = 1;
+        form.add(txtMaNV, g);
+        g.gridx = 2;
+        form.add(makeLabel("Mã NCC:"), g);
+        g.gridx = 3;
+        form.add(txtMaNCC, g);
 
         g.gridy = 2;
-        g.gridx = 0; form.add(makeLabel("Tổng Tiền:"), g);
-        g.gridx = 1; form.add(txtTongTien, g);
+        g.gridx = 0;
+        form.add(makeLabel("Tổng Tiền:"), g);
+        g.gridx = 1;
+        form.add(txtTongTien, g);
 
-        g.gridy = 3; g.gridx = 0; g.gridwidth = 4;
+        g.gridy = 3;
+        g.gridx = 0;
+        g.gridwidth = 4;
         form.add(buildButtons(), g);
 
-        JScrollPane sp = buildStyledTable(new String[]{"Mã Phiếu", "Ngày Nhập", "Nhân Viên", "Nhà Cung Cấp", "Tổng Tiền"});
+        JScrollPane sp = buildStyledTable(
+                new String[] { "Mã Phiếu", "Ngày Nhập", "Nhân Viên", "Nhà Cung Cấp", "Tổng Tiền" });
         table.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) fillForm();
+            if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1)
+                fillForm();
         });
 
         content.add(form, BorderLayout.NORTH);
@@ -92,16 +106,23 @@ public class PhieuNhapPanel extends BaseManagementPanel {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 4));
         p.setOpaque(false);
         JButton bSearch = makeButton("Tìm Kiếm", new Color(0, 150, 136));
-        JButton bSave   = makeButton("Lưu",       new Color(33, 150, 243));
-        JButton bUpdate = makeButton("Cập Nhật",  new Color(255, 152, 0));
-        JButton bDelete = makeButton("Xóa",       new Color(244, 67, 54));
-        JButton bRefresh= makeButton("Làm Mới",   new Color(156, 39, 176));
+        JButton bSave = makeButton("Lưu", new Color(33, 150, 243));
+        JButton bUpdate = makeButton("Cập Nhật", new Color(255, 152, 0));
+        JButton bDelete = makeButton("Xóa", new Color(244, 67, 54));
+        JButton bRefresh = makeButton("Làm Mới", new Color(156, 39, 176));
         bSearch.addActionListener(e -> activateSearch());
         bSave.addActionListener(e -> doSave());
         bUpdate.addActionListener(e -> doUpdate());
         bDelete.addActionListener(e -> doDelete());
-        bRefresh.addActionListener(e -> { clearForm(); loadData(); });
-        p.add(bSearch); p.add(bSave); p.add(bUpdate); p.add(bDelete); p.add(bRefresh);
+        bRefresh.addActionListener(e -> {
+            clearForm();
+            loadData();
+        });
+        p.add(bSearch);
+        p.add(bSave);
+        p.add(bUpdate);
+        p.add(bDelete);
+        p.add(bRefresh);
         return p;
     }
 
@@ -109,9 +130,9 @@ public class PhieuNhapPanel extends BaseManagementPanel {
     public void loadData() {
         tableModel.setRowCount(0);
         for (PhieuNhap pn : service.getAll()) {
-            tableModel.addRow(new Object[]{
+            tableModel.addRow(new Object[] {
                     pn.getMaPhieuNhap(), pn.getNgayNhap(),
-                    pn.getNhanVien()   != null ? pn.getNhanVien().getTenNhanVien() : "",
+                    pn.getNhanVien() != null ? pn.getNhanVien().getTenNhanVien() : "",
                     pn.getNhaCungCap() != null ? pn.getNhaCungCap().getTenNhaCungCap() : "",
                     pn.getTongTien()
             });
@@ -120,7 +141,8 @@ public class PhieuNhapPanel extends BaseManagementPanel {
 
     private void fillForm() {
         int row = table.getSelectedRow();
-        if (row < 0) return;
+        if (row < 0)
+            return;
         isUpdatingForm = true;
         int m = table.convertRowIndexToModel(row);
         String ma = str(tableModel.getValueAt(m, 0));
@@ -130,7 +152,7 @@ public class PhieuNhapPanel extends BaseManagementPanel {
         // Load FK codes from DB
         PhieuNhap pn = service.getById(ma);
         if (pn != null) {
-            txtMaNV.setText(pn.getNhanVien()   != null ? pn.getNhanVien().getMaNhanVien() : "");
+            txtMaNV.setText(pn.getNhanVien() != null ? pn.getNhanVien().getMaNhanVien() : "");
             txtMaNCC.setText(pn.getNhaCungCap() != null ? pn.getNhaCungCap().getMaNhaCungCap() : "");
         }
         isUpdatingForm = false;
@@ -138,8 +160,11 @@ public class PhieuNhapPanel extends BaseManagementPanel {
 
     private void clearForm() {
         isUpdatingForm = true;
-        txtMa.setText(""); txtNgay.setText(LocalDate.now().toString());
-        txtTongTien.setText("0"); txtMaNV.setText(""); txtMaNCC.setText("");
+        txtMa.setText("");
+        txtNgay.setText(LocalDate.now().toString());
+        txtTongTien.setText("0");
+        txtMaNV.setText("");
+        txtMaNCC.setText("");
         table.clearSelection();
         isUpdatingForm = false;
         clearFilter();
@@ -147,7 +172,11 @@ public class PhieuNhapPanel extends BaseManagementPanel {
 
     private void activateSearch() {
         isUpdatingForm = true;
-        txtMa.setText(""); txtNgay.setText(""); txtTongTien.setText(""); txtMaNV.setText(""); txtMaNCC.setText("");
+        txtMa.setText("");
+        txtNgay.setText("");
+        txtTongTien.setText("");
+        txtMaNV.setText("");
+        txtMaNCC.setText("");
         table.clearSelection();
         isUpdatingForm = false;
         applyFilter();
@@ -155,48 +184,85 @@ public class PhieuNhapPanel extends BaseManagementPanel {
 
     @Override
     protected void applyFilter() {
-        applyFilterOnColumns(new JTextField[]{txtMa, txtNgay, txtMaNV, txtMaNCC}, FILTER_COLS);
+        applyFilterOnColumns(new JTextField[] { txtMa, txtNgay, txtMaNV, txtMaNCC }, FILTER_COLS);
     }
 
     private void doSave() {
         try {
-            String ma = txtMa.getText().trim(); String ngay = txtNgay.getText().trim();
-            if (ma.isEmpty() || ngay.isEmpty()) { showError(this, "Mã và Ngày không được để trống!"); return; }
-            NhanVien   nv  = txtMaNV.getText().trim().isEmpty()  ? null : nhanVienService.getById(txtMaNV.getText().trim());
-            NhaCungCap ncc = txtMaNCC.getText().trim().isEmpty() ? null : nhaCungCapService.getById(txtMaNCC.getText().trim());
+            String ma = txtMa.getText().trim();
+            String ngay = txtNgay.getText().trim();
+            if (ma.isEmpty() || ngay.isEmpty()) {
+                showError(this, "Mã và Ngày không được để trống!");
+                return;
+            }
+            NhanVien nv = txtMaNV.getText().trim().isEmpty() ? null : nhanVienService.getById(txtMaNV.getText().trim());
+            NhaCungCap ncc = txtMaNCC.getText().trim().isEmpty() ? null
+                    : nhaCungCapService.getById(txtMaNCC.getText().trim());
             PhieuNhap pn = new PhieuNhap();
-            pn.setMaPhieuNhap(ma); pn.setNgayNhap(Date.valueOf(ngay));
-            pn.setTongTien(BigDecimal.ZERO); pn.setNhanVien(nv); pn.setNhaCungCap(ncc);
+            pn.setMaPhieuNhap(ma);
+            pn.setNgayNhap(Date.valueOf(ngay));
+            pn.setTongTien(BigDecimal.ZERO);
+            pn.setNhanVien(nv);
+            pn.setNhaCungCap(ncc);
             service.create(pn);
-            showSuccess(this, "Lưu thành công!"); clearForm(); loadData();
-        } catch (Exception ex) { showError(this, ex.getMessage()); }
+            showSuccess(this, "Lưu thành công!");
+            clearForm();
+            loadData();
+        } catch (Exception ex) {
+            showError(this, ex.getMessage());
+        }
     }
 
     private void doUpdate() {
         try {
             String ma = txtMa.getText().trim();
-            if (ma.isEmpty()) { showError(this, "Chọn phiếu nhập cần cập nhật!"); return; }
+            if (ma.isEmpty()) {
+                showError(this, "Chọn phiếu nhập cần cập nhật!");
+                return;
+            }
             PhieuNhap pn = service.getById(ma);
-            if (pn == null) { showError(this, "Phiếu nhập không tồn tại!"); return; }
+            if (pn == null) {
+                showError(this, "Phiếu nhập không tồn tại!");
+                return;
+            }
             String ngay = txtNgay.getText().trim();
-            if (!ngay.isEmpty()) pn.setNgayNhap(Date.valueOf(ngay));
+            if (!ngay.isEmpty())
+                pn.setNgayNhap(Date.valueOf(ngay));
             String maNV = txtMaNV.getText().trim();
-            if (!maNV.isEmpty()) pn.setNhanVien(nhanVienService.getById(maNV));
+            if (!maNV.isEmpty())
+                pn.setNhanVien(nhanVienService.getById(maNV));
             String maNCC = txtMaNCC.getText().trim();
-            if (!maNCC.isEmpty()) pn.setNhaCungCap(nhaCungCapService.getById(maNCC));
+            if (!maNCC.isEmpty())
+                pn.setNhaCungCap(nhaCungCapService.getById(maNCC));
             service.update(pn);
-            showSuccess(this, "Cập nhật thành công!"); clearForm(); loadData();
-        } catch (Exception ex) { showError(this, ex.getMessage()); }
+            showSuccess(this, "Cập nhật thành công!");
+            clearForm();
+            loadData();
+        } catch (Exception ex) {
+            showError(this, ex.getMessage());
+        }
     }
 
     private void doDelete() {
         String ma = txtMa.getText().trim();
-        if (ma.isEmpty()) { showError(this, "Chọn phiếu nhập cần xóa!"); return; }
-        int c = JOptionPane.showConfirmDialog(this, "Xác nhận xóa phiếu nhập " + ma + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        if (ma.isEmpty()) {
+            showError(this, "Chọn phiếu nhập cần xóa!");
+            return;
+        }
+        int c = JOptionPane.showConfirmDialog(this, "Xác nhận xóa phiếu nhập " + ma + "?", "Xác nhận",
+                JOptionPane.YES_NO_OPTION);
         if (c == JOptionPane.YES_OPTION) {
-            try { service.delete(ma); clearForm(); loadData(); } catch (Exception ex) { showError(this, ex.getMessage()); }
+            try {
+                service.delete(ma);
+                clearForm();
+                loadData();
+            } catch (Exception ex) {
+                showError(this, ex.getMessage());
+            }
         }
     }
 
-    private String str(Object o) { return o != null ? o.toString() : ""; }
+    private String str(Object o) {
+        return o != null ? o.toString() : "";
+    }
 }
