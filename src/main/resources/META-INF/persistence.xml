@@ -24,6 +24,7 @@
         <class>com.cafe.model.entity.ChiTietCongThucId</class>
         <class>com.cafe.model.entity.ChiTietPhieuNhap</class>
         <class>com.cafe.model.entity.ChiTietPhieuNhapId</class>
+        <class>com.cafe.model.entity.TaiKhoan</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
