@@ -1,19 +1,19 @@
 package com.cafe.view;
 
+import com.cafe.controller.NhaCungCapController;
 import com.cafe.model.entity.NhaCungCap;
-import com.cafe.service.NhaCungCapService;
 import javax.swing.*;
 import java.awt.*;
 
 public class NhaCungCapPanel extends BaseManagementPanel {
 
-    private final NhaCungCapService service;
+    private final NhaCungCapController controller;
     private JTextField txtMa, txtTen, txtDiaChi, txtSdt;
 
     private static final int[] FILTER_COLS = {0, 1, 2, 3};
 
-    public NhaCungCapPanel(NhaCungCapService service) {
-        this.service = service;
+    public NhaCungCapPanel(NhaCungCapController controller) {
+        this.controller = controller;
         build();
     }
 
@@ -35,6 +35,7 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         g.fill = GridBagConstraints.HORIZONTAL;
 
         txtMa     = makeField(10);
+        txtMa.setEditable(false);
         txtTen    = makeField(20);
         txtDiaChi = makeField(20);
         txtSdt    = makeField(15);
@@ -70,11 +71,11 @@ public class NhaCungCapPanel extends BaseManagementPanel {
     private JPanel buildButtons() {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 4));
         p.setOpaque(false);
-        JButton bSearch = makeButton("Tìm Kiếm", new Color(0, 150, 136));
-        JButton bSave   = makeButton("Lưu",       new Color(33, 150, 243));
-        JButton bUpdate = makeButton("Cập Nhật",  new Color(255, 152, 0));
-        JButton bDelete = makeButton("Xóa",       new Color(244, 67, 54));
-        JButton bRefresh= makeButton("Làm Mới",   new Color(156, 39, 176));
+        JButton bSearch  = makeButton("Tìm Kiếm", new Color(0, 150, 136));
+        JButton bSave    = makeButton("Lưu",       new Color(33, 150, 243));
+        JButton bUpdate  = makeButton("Cập Nhật",  new Color(255, 152, 0));
+        JButton bDelete  = makeButton("Xóa",       new Color(244, 67, 54));
+        JButton bRefresh = makeButton("Làm Mới",   new Color(156, 39, 176));
         bSearch.addActionListener(e -> activateSearch());
         bSave.addActionListener(e -> doSave());
         bUpdate.addActionListener(e -> doUpdate());
@@ -87,7 +88,7 @@ public class NhaCungCapPanel extends BaseManagementPanel {
     @Override
     public void loadData() {
         tableModel.setRowCount(0);
-        for (NhaCungCap ncc : service.getAll())
+        for (NhaCungCap ncc : controller.getAll())
             tableModel.addRow(new Object[]{ncc.getMaNhaCungCap(), ncc.getTenNhaCungCap(), ncc.getDiaChi(), ncc.getSoDienThoai()});
     }
 
@@ -124,14 +125,15 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         applyFilterOnColumns(new JTextField[]{txtMa, txtTen, txtDiaChi, txtSdt}, FILTER_COLS);
     }
 
+    // View chỉ thu thập dữ liệu từ form, gọi controller và hiển thị kết quả
     private void doSave() {
         try {
-            String ma = txtMa.getText().trim(); String ten = txtTen.getText().trim();
-            if (ma.isEmpty() || ten.isEmpty()) { showError(this, "Mã và Tên không được để trống!"); return; }
             NhaCungCap ncc = new NhaCungCap();
-            ncc.setMaNhaCungCap(ma); ncc.setTenNhaCungCap(ten);
-            ncc.setDiaChi(txtDiaChi.getText().trim()); ncc.setSoDienThoai(txtSdt.getText().trim());
-            service.create(ncc);
+            ncc.setMaNhaCungCap(controller.getNextId());
+            ncc.setTenNhaCungCap(txtTen.getText().trim());
+            ncc.setDiaChi(txtDiaChi.getText().trim());
+            ncc.setSoDienThoai(txtSdt.getText().trim());
+            controller.save(ncc);
             showSuccess(this, "Lưu thành công!"); clearForm(); loadData();
         } catch (Exception ex) { showError(this, ex.getMessage()); }
     }
@@ -140,11 +142,12 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         try {
             String ma = txtMa.getText().trim();
             if (ma.isEmpty()) { showError(this, "Chọn nhà cung cấp cần cập nhật!"); return; }
-            NhaCungCap ncc = service.getById(ma);
+            NhaCungCap ncc = controller.getById(ma);
             if (ncc == null) { showError(this, "Nhà cung cấp không tồn tại!"); return; }
             ncc.setTenNhaCungCap(txtTen.getText().trim());
-            ncc.setDiaChi(txtDiaChi.getText().trim()); ncc.setSoDienThoai(txtSdt.getText().trim());
-            service.update(ncc);
+            ncc.setDiaChi(txtDiaChi.getText().trim());
+            ncc.setSoDienThoai(txtSdt.getText().trim());
+            controller.update(ncc);
             showSuccess(this, "Cập nhật thành công!"); clearForm(); loadData();
         } catch (Exception ex) { showError(this, ex.getMessage()); }
     }
@@ -154,7 +157,8 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         if (ma.isEmpty()) { showError(this, "Chọn NCC cần xóa!"); return; }
         int c = JOptionPane.showConfirmDialog(this, "Xác nhận xóa NCC " + ma + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (c == JOptionPane.YES_OPTION) {
-            try { service.delete(ma); clearForm(); loadData(); } catch (Exception ex) { showError(this, ex.getMessage()); }
+            try { controller.delete(ma); clearForm(); loadData(); }
+            catch (Exception ex) { showError(this, ex.getMessage()); }
         }
     }
 

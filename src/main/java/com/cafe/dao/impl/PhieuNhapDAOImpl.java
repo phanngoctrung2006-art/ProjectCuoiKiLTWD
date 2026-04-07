@@ -50,4 +50,19 @@ public class PhieuNhapDAOImpl extends GenericDAOImpl<PhieuNhap, String> implemen
             em.close();
         }
     }
+
+    @Override
+    public String getMaxId() {
+        EntityManager em = HibernateUtil.getEntityManager();
+        try {
+            String jpql = "SELECT pn.MaPhieuNhap FROM PhieuNhap pn ORDER BY pn.MaPhieuNhap DESC";
+            return em.createQuery(jpql, String.class)
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
 }

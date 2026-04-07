@@ -9,4 +9,5 @@ public interface NhaCungCapService {
     NhaCungCap create(NhaCungCap nhaCungCap);
     NhaCungCap update(NhaCungCap nhaCungCap);
     void delete(String id);
+    String getNextId();
 }

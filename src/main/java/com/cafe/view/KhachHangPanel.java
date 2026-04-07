@@ -1,19 +1,19 @@
 package com.cafe.view;
 
+import com.cafe.controller.KhachHangController;
 import com.cafe.model.entity.KhachHang;
-import com.cafe.service.KhachHangService;
 import javax.swing.*;
 import java.awt.*;
 
 public class KhachHangPanel extends BaseManagementPanel {
 
-    private final KhachHangService service;
+    private final KhachHangController controller;
     private JTextField txtMa, txtTen, txtSdt;
 
     private static final int[] FILTER_COLS = {0, 1, 2};
 
-    public KhachHangPanel(KhachHangService service) {
-        this.service = service;
+    public KhachHangPanel(KhachHangController controller) {
+        this.controller = controller;
         build();
     }
 
@@ -84,7 +84,7 @@ public class KhachHangPanel extends BaseManagementPanel {
     @Override
     public void loadData() {
         tableModel.setRowCount(0);
-        for (KhachHang kh : service.getAll())
+        for (KhachHang kh : controller.getAll())
             tableModel.addRow(new Object[]{kh.getMaKhachHang(), kh.getTenKhachHang(), kh.getSoDienThoai()});
     }
 
@@ -120,13 +120,13 @@ public class KhachHangPanel extends BaseManagementPanel {
         applyFilterOnColumns(new JTextField[]{txtMa, txtTen, txtSdt}, FILTER_COLS);
     }
 
+    // View chỉ thu thập dữ liệu từ form, gọi controller và hiển thị kết quả
     private void doSave() {
         try {
-            String ma = txtMa.getText().trim(); String ten = txtTen.getText().trim();
-            if (ma.isEmpty() || ten.isEmpty()) { showError(this, "Mã và Tên không được để trống!"); return; }
             KhachHang kh = new KhachHang();
-            kh.setMaKhachHang(ma); kh.setTenKhachHang(ten); kh.setSoDienThoai(txtSdt.getText().trim());
-            service.create(kh);
+            kh.setTenKhachHang(txtTen.getText().trim());
+            kh.setSoDienThoai(txtSdt.getText().trim());
+            controller.save(kh);
             showSuccess(this, "Lưu thành công!"); clearForm(); loadData();
         } catch (Exception ex) { showError(this, ex.getMessage()); }
     }
@@ -135,10 +135,11 @@ public class KhachHangPanel extends BaseManagementPanel {
         try {
             String ma = txtMa.getText().trim();
             if (ma.isEmpty()) { showError(this, "Chọn khách hàng cần cập nhật!"); return; }
-            KhachHang kh = service.getById(ma);
+            KhachHang kh = controller.getById(ma);
             if (kh == null) { showError(this, "Khách hàng không tồn tại!"); return; }
-            kh.setTenKhachHang(txtTen.getText().trim()); kh.setSoDienThoai(txtSdt.getText().trim());
-            service.update(kh);
+            kh.setTenKhachHang(txtTen.getText().trim());
+            kh.setSoDienThoai(txtSdt.getText().trim());
+            controller.update(kh);
             showSuccess(this, "Cập nhật thành công!"); clearForm(); loadData();
         } catch (Exception ex) { showError(this, ex.getMessage()); }
     }
@@ -148,7 +149,8 @@ public class KhachHangPanel extends BaseManagementPanel {
         if (ma.isEmpty()) { showError(this, "Chọn khách hàng cần xóa!"); return; }
         int c = JOptionPane.showConfirmDialog(this, "Xác nhận xóa khách hàng " + ma + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (c == JOptionPane.YES_OPTION) {
-            try { service.delete(ma); clearForm(); loadData(); } catch (Exception ex) { showError(this, ex.getMessage()); }
+            try { controller.delete(ma); clearForm(); loadData(); }
+            catch (Exception ex) { showError(this, ex.getMessage()); }
         }
     }
 

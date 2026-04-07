@@ -9,4 +9,5 @@ public interface NguyenLieuService {
     NguyenLieu create(NguyenLieu nguyenLieu);
     NguyenLieu update(NguyenLieu nguyenLieu);
     void delete(String id);
+    String getNextId();
 }

@@ -1,21 +1,21 @@
 package com.cafe.dao.impl;
 
-import com.cafe.dao.NhaCungCapDAO;
-import com.cafe.model.entity.NhaCungCap;
+import com.cafe.dao.LoaiThucUongDAO;
+import com.cafe.model.entity.LoaiThucUong;
 import com.cafe.util.HibernateUtil;
 import jakarta.persistence.EntityManager;
 
-public class NhaCungCapDAOImpl extends GenericDAOImpl<NhaCungCap, String> implements NhaCungCapDAO {
+public class LoaiThucUongDAOImpl extends GenericDAOImpl<LoaiThucUong, String> implements LoaiThucUongDAO {
 
-    public NhaCungCapDAOImpl() {
-        super(NhaCungCap.class);
+    public LoaiThucUongDAOImpl() {
+        super(LoaiThucUong.class);
     }
 
     @Override
     public String getMaxId() {
         EntityManager em = HibernateUtil.getEntityManager();
         try {
-            String jpql = "SELECT ncc.MaNhaCungCap FROM NhaCungCap ncc ORDER BY ncc.MaNhaCungCap DESC";
+            String jpql = "SELECT lt.MaLoai FROM LoaiThucUong lt ORDER BY lt.MaLoai DESC";
             return em.createQuery(jpql, String.class)
                     .setMaxResults(1)
                     .getSingleResult();

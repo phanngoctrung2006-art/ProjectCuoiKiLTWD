@@ -9,4 +9,5 @@ public interface PhieuNhapService {
     PhieuNhap create(PhieuNhap phieuNhap);
     PhieuNhap update(PhieuNhap phieuNhap);
     void delete(String id);
+    String getNextId();
 }

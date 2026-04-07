@@ -1,19 +1,19 @@
 package com.cafe.view;
 
+import com.cafe.controller.NguyenLieuController;
 import com.cafe.model.entity.NguyenLieu;
-import com.cafe.service.NguyenLieuService;
 import javax.swing.*;
 import java.awt.*;
 
 public class NguyenLieuPanel extends BaseManagementPanel {
 
-    private final NguyenLieuService service;
+    private final NguyenLieuController controller;
     private JTextField txtMa, txtTen, txtSoLuong;
 
     private static final int[] FILTER_COLS = {0, 1, 2};
 
-    public NguyenLieuPanel(NguyenLieuService service) {
-        this.service = service;
+    public NguyenLieuPanel(NguyenLieuController controller) {
+        this.controller = controller;
         build();
     }
 
@@ -35,6 +35,7 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         g.fill = GridBagConstraints.HORIZONTAL;
 
         txtMa      = makeField(10);
+        txtMa.setEditable(false);
         txtTen     = makeField(20);
         txtSoLuong = makeField(12);
 
@@ -67,26 +68,24 @@ public class NguyenLieuPanel extends BaseManagementPanel {
     private JPanel buildButtons() {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 4));
         p.setOpaque(false);
-        JButton bSearch = makeButton("Tìm Kiếm", new Color(0, 150, 136));
-        JButton bNew    = makeButton("Mới",       new Color(76, 175, 80));
-        JButton bSave   = makeButton("Lưu",       new Color(33, 150, 243));
-        JButton bUpdate = makeButton("Cập Nhật",  new Color(255, 152, 0));
-        JButton bDelete = makeButton("Xóa",       new Color(244, 67, 54));
-        JButton bRefresh= makeButton("Làm Mới",   new Color(156, 39, 176));
+        JButton bSearch  = makeButton("Tìm Kiếm", new Color(0, 150, 136));
+        JButton bSave    = makeButton("Lưu",       new Color(33, 150, 243));
+        JButton bUpdate  = makeButton("Cập Nhật",  new Color(255, 152, 0));
+        JButton bDelete  = makeButton("Xóa",       new Color(244, 67, 54));
+        JButton bRefresh = makeButton("Làm Mới",   new Color(156, 39, 176));
         bSearch.addActionListener(e -> activateSearch());
-        bNew.addActionListener(e -> clearForm());
         bSave.addActionListener(e -> doSave());
         bUpdate.addActionListener(e -> doUpdate());
         bDelete.addActionListener(e -> doDelete());
         bRefresh.addActionListener(e -> { clearForm(); loadData(); });
-        p.add(bSearch); p.add(bNew); p.add(bSave); p.add(bUpdate); p.add(bDelete); p.add(bRefresh);
+        p.add(bSearch); p.add(bSave); p.add(bUpdate); p.add(bDelete); p.add(bRefresh);
         return p;
     }
 
     @Override
     public void loadData() {
         tableModel.setRowCount(0);
-        for (NguyenLieu nl : service.getAll())
+        for (NguyenLieu nl : controller.getAll())
             tableModel.addRow(new Object[]{nl.getMaNguyenLieu(), nl.getTenNguyenLieu(), nl.getSoLuong()});
     }
 
@@ -122,14 +121,15 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         applyFilterOnColumns(new JTextField[]{txtMa, txtTen, txtSoLuong}, FILTER_COLS);
     }
 
+    // View chỉ thu thập dữ liệu từ form, gọi controller và hiển thị kết quả
     private void doSave() {
         try {
-            String ma = txtMa.getText().trim(); String ten = txtTen.getText().trim();
-            if (ma.isEmpty() || ten.isEmpty()) { showError(this, "Mã và Tên không được để trống!"); return; }
-            NguyenLieu nl = new NguyenLieu(); nl.setMaNguyenLieu(ma); nl.setTenNguyenLieu(ten);
+            NguyenLieu nl = new NguyenLieu();
+            nl.setMaNguyenLieu(controller.getNextId());
+            nl.setTenNguyenLieu(txtTen.getText().trim());
             String sl = txtSoLuong.getText().trim();
             if (!sl.isEmpty()) nl.setSoLuong(Integer.parseInt(sl));
-            service.create(nl);
+            controller.save(nl);
             showSuccess(this, "Lưu thành công!"); clearForm(); loadData();
         } catch (Exception ex) { showError(this, ex.getMessage()); }
     }
@@ -138,12 +138,12 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         try {
             String ma = txtMa.getText().trim();
             if (ma.isEmpty()) { showError(this, "Chọn nguyên liệu cần cập nhật!"); return; }
-            NguyenLieu nl = service.getById(ma);
+            NguyenLieu nl = controller.getById(ma);
             if (nl == null) { showError(this, "Nguyên liệu không tồn tại!"); return; }
             nl.setTenNguyenLieu(txtTen.getText().trim());
             String sl = txtSoLuong.getText().trim();
             if (!sl.isEmpty()) nl.setSoLuong(Integer.parseInt(sl));
-            service.update(nl);
+            controller.update(nl);
             showSuccess(this, "Cập nhật thành công!"); clearForm(); loadData();
         } catch (Exception ex) { showError(this, ex.getMessage()); }
     }
@@ -153,7 +153,8 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         if (ma.isEmpty()) { showError(this, "Chọn nguyên liệu cần xóa!"); return; }
         int c = JOptionPane.showConfirmDialog(this, "Xác nhận xóa nguyên liệu " + ma + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (c == JOptionPane.YES_OPTION) {
-            try { service.delete(ma); clearForm(); loadData(); } catch (Exception ex) { showError(this, ex.getMessage()); }
+            try { controller.delete(ma); clearForm(); loadData(); }
+            catch (Exception ex) { showError(this, ex.getMessage()); }
         }
     }
 
