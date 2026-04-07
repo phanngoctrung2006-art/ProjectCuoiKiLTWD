@@ -121,3 +121,11 @@ INSERT INTO ChiTietPhieuNhap VALUES
 ('PN03','NL04',30,2500),
 ('PN04','NL06',45,3000),
 ('PN05','NL08',70,2000);
+
+-- Tài khoản
+INSERT INTO TaiKhoan VALUES 
+('NV01', '483920', 'STAFF', 'NV01'),
+('NV02', '927154', 'STAFF', 'NV02'),
+('NV03', '615309', 'STAFF', 'NV03'),
+('NV04', '804276', 'STAFF', 'NV04'),
+('NV05', '392681', 'STAFF', 'NV05');
