@@ -10,16 +10,16 @@ INSERT INTO LoaiThucUong VALUES
 
 -- Thức uống
 INSERT INTO ThucUong VALUES
-('TU01','Cà phê sữa đá',30000,'L01'),
-('TU02','Cà phê đen đá',25000,'L01'),
-('TU03','Trà đào cam sả',35000,'L02'),
-('TU04','Trà vải',32000,'L02'),
-('TU05','Matcha đá xay',40000,'L03'),
-('TU06','Socola đá xay',42000,'L03'),
-('TU07','Nước ép cam',30000,'L04'),
-('TU08','Nước ép dưa hấu',28000,'L04'),
-('TU09','Trà sữa trân châu',45000,'L05'),
-('TU10','Trà sữa matcha',47000,'L05');
+('TU01','Cà phê sữa đá',30000,'L01', "/images/ca_phe_sua_da.jpg"),
+('TU02','Cà phê đen đá',25000,'L01', "/images/ca_phe_den_da.jpg"),
+('TU03','Trà đào cam sả',35000,'L02', "/images/tra_dao_cam_sa.jpg"),
+('TU04','Trà vải',32000,'L02', "/images/tra_vai.jpg"),
+('TU05','Matcha đá xay',40000,'L03', "/images/matcha_da_xay.jpg"),
+('TU06','Socola đá xay',42000,'L03', "/images/socola_da_xay.jpg"),
+('TU07','Nước ép cam',30000,'L04', "/images/nuoc_cam.jpg"),
+('TU08','Nước ép dưa hấu',28000,'L04', "/images/nuoc_ep_dua_hau.jpg"),
+('TU09','Trà sữa trân châu',45000,'L05', "/images/tra_sua_tran_chau.jpg"),
+('TU10','Trà sữa matcha',47000,'L05', "/images/tra_sua_matcha.jpg");
 
 -- Công thức
 INSERT INTO CongThuc VALUES

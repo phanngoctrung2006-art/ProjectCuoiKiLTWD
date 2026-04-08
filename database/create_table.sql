@@ -9,10 +9,11 @@ CREATE TABLE LoaiThucUong (
 -- Thức uống
 CREATE TABLE ThucUong (
     MaThucUong CHAR(5) PRIMARY KEY,
-    TenThucUong VARCHAR(100),
-    Gia DECIMAL(10,2),
-    MaLoai CHAR(5),
-    FOREIGN KEY (MaLoai) REFERENCES LoaiThucUong(MaLoai)
+    TenThucUong VARCHAR(100) NOT NULL,
+    Gia DECIMAL(10,2) NOT NULL,
+    MaLoai CHAR(5) NOT NULL,
+    Url VARCHAR(50) NOT NULL UNIQUE,
+    FOREIGN KEY (MaLoai) REFERENCES 
 );
 
 -- Công thức

@@ -52,7 +52,7 @@ public class AddProductPanel extends JPanel {
 
         Icon uploadButtons = new ImageIcon(getClass().getResource("/icon/upload.jpg"));
         uploadButton = new JButton(uploadButtons);
-        addButton = new JButton("THÊM");
+        addButton = new JButton("THÊM SẢN PHẨM");
 
         // Gắn event vào Button
         uploadButton.addActionListener(e -> {
@@ -73,7 +73,7 @@ public class AddProductPanel extends JPanel {
         add(productPrice);
         add(imageLabel);
         add(uploadButton);
-        add(addButton);
+        add(addButton, Box.CENTER_ALIGNMENT);
     }
 
     public void loadCatagories(List<LoaiThucUong> categories) {
