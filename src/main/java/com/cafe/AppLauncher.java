@@ -21,6 +21,7 @@ public class AppLauncher {
         NguyenLieuDAO nguyenLieuDAO     = new NguyenLieuDAOImpl();
         NhaCungCapDAO nhaCungCapDAO     = new NhaCungCapDAOImpl();
         PhieuNhapDAO phieuNhapDAO       = new PhieuNhapDAOImpl();
+        TaiKhoanDAO taiKhoanDAO         = new TaiKhoanDAOImpl();
 
         // Service Layer  (chứa validation)
         HoaDonService hoaDonService             = new HoaDonServiceImpl(hoaDonDAO);
@@ -32,6 +33,7 @@ public class AppLauncher {
         NguyenLieuService nguyenLieuService     = new NguyenLieuServiceImpl(nguyenLieuDAO);
         NhaCungCapService nhaCungCapService     = new NhaCungCapServiceImpl(nhaCungCapDAO);
         PhieuNhapService phieuNhapService       = new PhieuNhapServiceImpl(phieuNhapDAO);
+        TaiKhoanService taiKhoanService         = new TaiKhoanServiceImpl(taiKhoanDAO);
 
         // Controller Layer  (cầu nối Service ↔ View, không chứa validation)
         HoaDonController hoaDonController = new HoaDonController(
@@ -44,21 +46,25 @@ public class AppLauncher {
         NguyenLieuController nguyenLieuController = new NguyenLieuController(nguyenLieuService);
         PhieuNhapController phieuNhapController = new PhieuNhapController(phieuNhapService, nhanVienService, nhaCungCapService);
         KhachHangController khachHangController = new KhachHangController(khachHangService);
+        TaiKhoanController taiKhoanController = new TaiKhoanController(taiKhoanService);
 
         // View Layer  (chỉ hiển thị giao diện, gọi controller)
         SwingUtilities.invokeLater(() -> {
-            HoaDonManagementPanel hoaDonPanel   = new HoaDonManagementPanel(hoaDonController);
-            NhanVienPanel nhanVienPanel         = new NhanVienPanel(nhanVienController);
-            ThucUongPanel thucUongPanel         = new ThucUongPanel(thucUongController);
-            PhieuNhapPanel phieuNhapPanel       = new PhieuNhapPanel(phieuNhapController);
-            NguyenLieuPanel nguyenLieuPanel     = new NguyenLieuPanel(nguyenLieuController);
-            NhaCungCapPanel nhaCungCapPanel     = new NhaCungCapPanel(nhaCungCapController);
-            KhachHangPanel khachHangPanel       = new KhachHangPanel(khachHangController);
+            LoginFrame loginFrame = new LoginFrame(taiKhoanController, () -> {
+                HoaDonManagementPanel hoaDonPanel   = new HoaDonManagementPanel(hoaDonController);
+                NhanVienPanel nhanVienPanel         = new NhanVienPanel(nhanVienController);
+                ThucUongPanel thucUongPanel         = new ThucUongPanel(thucUongController);
+                PhieuNhapPanel phieuNhapPanel       = new PhieuNhapPanel(phieuNhapController);
+                NguyenLieuPanel nguyenLieuPanel     = new NguyenLieuPanel(nguyenLieuController);
+                NhaCungCapPanel nhaCungCapPanel     = new NhaCungCapPanel(nhaCungCapController);
+                KhachHangPanel khachHangPanel       = new KhachHangPanel(khachHangController);
 
-            MainFrame frame = new MainFrame(
-                    hoaDonPanel, nhanVienPanel, thucUongPanel,
-                    phieuNhapPanel, nguyenLieuPanel, nhaCungCapPanel, khachHangPanel);
-            frame.setVisible(true);
+                MainFrame frame = new MainFrame(
+                        hoaDonPanel, nhanVienPanel, thucUongPanel,
+                        phieuNhapPanel, nguyenLieuPanel, nhaCungCapPanel, khachHangPanel);
+                frame.setVisible(true);
+            });
+            loginFrame.setVisible(true);
         });
     }
 }

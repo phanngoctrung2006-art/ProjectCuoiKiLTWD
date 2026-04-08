@@ -24,12 +24,13 @@
         <class>com.cafe.model.entity.ChiTietCongThucId</class>
         <class>com.cafe.model.entity.ChiTietPhieuNhap</class>
         <class>com.cafe.model.entity.ChiTietPhieuNhapId</class>
+        <class>com.cafe.model.entity.TaiKhoan</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/QuanLyCafe?useSSL=false&amp;serverTimezone=Asia/Ho_Chi_Minh&amp;allowPublicKeyRetrieval=true"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="123456"/>
+            <property name="jakarta.persistence.jdbc.password" value="12345"/>
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
