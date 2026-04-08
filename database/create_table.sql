@@ -123,3 +123,12 @@ CREATE TABLE ChiTietPhieuNhap (
     FOREIGN KEY (MaPhieuNhap) REFERENCES PhieuNhap(MaPhieuNhap),
     FOREIGN KEY (MaNguyenLieu) REFERENCES NguyenLieu(MaNguyenLieu)
 );
+
+-- Tài khoản
+CREATE TABLE TaiKhoan (
+    TenDangNhap VARCHAR(50) PRIMARY KEY,
+    MatKhau VARCHAR(50),
+    Quyen VARCHAR(50),
+    MaNhanVien CHAR(5),
+    FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
+);
