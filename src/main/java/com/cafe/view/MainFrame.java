@@ -11,7 +11,8 @@ public class MainFrame extends JFrame {
             PhieuNhapPanel phieuNhapPanel,
             NguyenLieuPanel nguyenLieuPanel,
             NhaCungCapPanel nhaCungCapPanel,
-            KhachHangPanel khachHangPanel) {
+            KhachHangPanel khachHangPanel,
+            MenuPanel menuPanel) {
         setTitle("☕ Hệ Thống Quản Lý Bán Hàng Cafe");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1400, 900);
@@ -71,6 +72,7 @@ public class MainFrame extends JFrame {
         tabs.addTab("Nguyên Liệu", nguyenLieuPanel);
         tabs.addTab("Nhà Cung Cấp", nhaCungCapPanel);
         tabs.addTab("Khách Hàng", khachHangPanel);
+        tabs.addTab("Sản Phẩm", menuPanel);
 
         add(tabs, BorderLayout.CENTER);
     }
