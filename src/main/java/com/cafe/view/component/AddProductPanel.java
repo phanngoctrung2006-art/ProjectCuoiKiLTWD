@@ -3,6 +3,7 @@ package com.cafe.view.component;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -73,6 +74,14 @@ public class AddProductPanel extends JPanel {
         add(imageLabel);
         add(uploadButton);
         add(addButton);
+    }
+
+    public void loadCatagories(List<LoaiThucUong> categories) {
+        categoriesComboBox.removeAllItems();
+
+        for (LoaiThucUong c : categories) {
+            categoriesComboBox.addItem(c);
+        }
     }
 
     private Runnable onUploadClick;

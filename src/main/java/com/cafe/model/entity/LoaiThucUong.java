@@ -17,7 +17,8 @@ public class LoaiThucUong {
     @OneToMany(mappedBy = "LoaiThucUong", cascade = CascadeType.ALL)
     private List<ThucUong> DanhSachThucUong;
 
-    public LoaiThucUong() {}
+    public LoaiThucUong() {
+    }
 
     public LoaiThucUong(String MaLoai, String TenLoaiThucUong) {
         this.MaLoai = MaLoai;
@@ -46,5 +47,10 @@ public class LoaiThucUong {
 
     public void setDanhSachThucUong(List<ThucUong> DanhSachThucUong) {
         this.DanhSachThucUong = DanhSachThucUong;
+    }
+
+    @Override
+    public String toString() {
+        return this.TenLoaiThucUong;
     }
 }

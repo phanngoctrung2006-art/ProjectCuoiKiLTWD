@@ -31,11 +31,12 @@ public class ThucUong {
     public ThucUong() {
     }
 
-    public ThucUong(String MaThucUong, String TenThucUong, BigDecimal Gia, LoaiThucUong LoaiThucUong) {
+    public ThucUong(String MaThucUong, String TenThucUong, BigDecimal Gia, LoaiThucUong LoaiThucUong, String url) {
         this.MaThucUong = MaThucUong;
         this.TenThucUong = TenThucUong;
         this.Gia = Gia;
         this.LoaiThucUong = LoaiThucUong;
+        this.url = url;
     }
 
     public String getMaThucUong() {

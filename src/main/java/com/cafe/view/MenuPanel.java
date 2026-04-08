@@ -7,6 +7,7 @@ import com.cafe.view.component.MenuItemPanel;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -20,7 +21,7 @@ public class MenuPanel extends JPanel {
     public MenuPanel() {
         setBackground(new Color(245, 245, 245));
         setOpaque(false);
-        setLayout(new MigLayout("fill, debug", "[80%][20%]"));
+        setLayout(new MigLayout("fill", "[80%][20%]"));
 
         initComponents();
     }
@@ -50,6 +51,7 @@ public class MenuPanel extends JPanel {
 
         for (ThucUong p : products) {
             ImageIcon image = new ImageIcon(getClass().getResource(p.getUrl()));
+            image = resizeImage(image, 200, 200);
             MenuItemPanel items = new MenuItemPanel(p.getTenThucUong(), p.getGia().toString(), image);
 
             productContainer.add(items);
@@ -57,6 +59,12 @@ public class MenuPanel extends JPanel {
 
         productContainer.revalidate();
         productContainer.repaint();
+    }
+
+    public ImageIcon resizeImage(ImageIcon icon, int width, int height) {
+        Image img = icon.getImage();
+        Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledImg);
     }
 
     public AddProductPanel getAddProductPanel() {

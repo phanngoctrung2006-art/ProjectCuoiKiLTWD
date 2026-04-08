@@ -59,12 +59,12 @@ public class AppLauncher {
             // hoaDonPanel, nhanVienPanel, thucUongPanel,
             // phieuNhapPanel, nguyenLieuPanel, nhaCungCapPanel, khachHangPanel);
             // frame.setVisible(true);
-
+            LoaiThucUongDAO loaiThucUongDAO = new LoaiThucUongDAOImpl();
             ThucUongDAO thucUongDAO = new ThucUongDAOImpl();
             ThucUongService thucUongService = new ThucUongServiceImpl(thucUongDAO);
 
             MenuPanel menuPanel = new MenuPanel();
-            MenuController menuController = new MenuController(menuPanel, thucUongService);
+            MenuController menuController = new MenuController(menuPanel, thucUongService, loaiThucUongDAO);
 
             JFrame frame = new JFrame("Ứng dụng quản lý Menu");
             frame.add(menuPanel);
