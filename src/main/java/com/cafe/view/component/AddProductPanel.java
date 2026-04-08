@@ -4,83 +4,80 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.List;
+import java.util.Locale.Category;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.cafe.model.entity.LoaiThucUong;
+import com.cafe.view.swing.CategoryFieldPanel;
+import com.cafe.view.swing.MyButton;
 import com.cafe.view.swing.MyTextField;
+
+import net.miginfocom.swing.MigLayout;
 
 public class AddProductPanel extends JPanel {
     private JLabel titleLabel;
     private MyTextField productName;
 
-    private JLabel categoryLabel;
-    private JComboBox<LoaiThucUong> categoriesComboBox;
+    private CategoryFieldPanel<LoaiThucUong> productCategories;
 
     private MyTextField productPrice;
 
     private JLabel imageLabel;
-    private JButton uploadButton;
+    private MyButton uploadButton;
 
-    private JButton addButton;
+    private MyButton addButton;
 
     public AddProductPanel() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new MigLayout(
+                "fill, wrap 1, insets 0, gapy 5",
+                "[grow]",
+                ""));
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        titleLabel = new JLabel("Thêm sản phẩm mới");
+        titleLabel = new JLabel("THÊM SẢN PHẨM MỚI");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
 
         productName = new MyTextField("Tên sản phẩm");
-        categoryLabel = new JLabel("Loại sản phẩm");
 
-        categoriesComboBox = new JComboBox<>();
-        categoriesComboBox.setAlignmentX(LEFT_ALIGNMENT);
-        categoriesComboBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        productCategories = new CategoryFieldPanel<LoaiThucUong>("Loại sản phẩm");
 
         productPrice = new MyTextField("Giá sản phẩm");
-        imageLabel = new JLabel("Ảnh sản phẩm");
+        imageLabel = new JLabel("Tải lên ảnh sản phẩm");
+        imageLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
-        Icon uploadButtons = new ImageIcon(getClass().getResource("/icon/upload.jpg"));
-        uploadButton = new JButton(uploadButtons);
-        addButton = new JButton("THÊM SẢN PHẨM");
+        ImageIcon uploadIcon = new ImageIcon(getClass().getResource("/icon/upload.jpg"));
+        uploadButton = new MyButton(uploadIcon);
 
-        // Gắn event vào Button
+        addButton = new MyButton("THÊM SẢN PHẨM");
         uploadButton.addActionListener(e -> {
             if (onUploadClick != null)
                 onUploadClick.run();
         });
-
         addButton.addActionListener(e -> {
             if (onAddClick != null)
                 onAddClick.run();
         });
 
-        add(titleLabel);
-        add(productName);
-        add(categoryLabel);
-        add(Box.createVerticalStrut(5));
-        add(categoriesComboBox);
-        add(productPrice);
-        add(imageLabel);
-        add(uploadButton);
-        add(addButton, Box.CENTER_ALIGNMENT);
+        add(titleLabel, "growx");
+        add(productName, "growx");
+        add(productCategories, "growx");
+        add(productPrice, "growx");
+        add(imageLabel, "growx");
+        add(uploadButton, "growx");
+        add(addButton, "center, w 200!");
     }
 
     public void loadCatagories(List<LoaiThucUong> categories) {
-        categoriesComboBox.removeAllItems();
+        productCategories.getComboBox().removeAllItems();
 
         for (LoaiThucUong c : categories) {
-            categoriesComboBox.addItem(c);
+            productCategories.getComboBox().addItem(c);
         }
     }
 
@@ -112,11 +109,11 @@ public class AddProductPanel extends JPanel {
     }
 
     public JComboBox<LoaiThucUong> getCategoriesComboBox() {
-        return categoriesComboBox;
+        return productCategories.getComboBox();
     }
 
     public void setCategoriesComboBox(JComboBox<LoaiThucUong> categoriesComboBox) {
-        this.categoriesComboBox = categoriesComboBox;
+        this.productCategories.setComboBox(categoriesComboBox);
     }
 
 }

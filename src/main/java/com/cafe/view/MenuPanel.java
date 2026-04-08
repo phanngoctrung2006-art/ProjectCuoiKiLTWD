@@ -43,7 +43,7 @@ public class MenuPanel extends JPanel {
         addProductPanel = new AddProductPanel();
 
         add(scrollPane, "grow");
-        add(addProductPanel, "growy");
+        add(addProductPanel, "grow");
     }
 
     public void displayProducts(List<ThucUong> products) {

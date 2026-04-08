@@ -8,7 +8,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import com.cafe.dao.LoaiThucUongDAO;
-import com.cafe.dao.ThucUongDAO;
 import com.cafe.model.entity.LoaiThucUong;
 import com.cafe.model.entity.ThucUong;
 import com.cafe.service.ThucUongService;
@@ -82,8 +81,6 @@ public class MenuController {
                     // ===== URL LƯU DB =====
                     selectedImageUrl = "/images/" + fileName;
 
-                    System.out.println("Saved image URL: " + selectedImageUrl);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(menuPanel, "Upload ảnh thất bại!");
@@ -120,7 +117,7 @@ public class MenuController {
 
     private boolean validateName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(menuPanel, "Giá không được để trống!");
+            JOptionPane.showMessageDialog(menuPanel, "Tên không được để trống!");
             return false;
         }
         return true;

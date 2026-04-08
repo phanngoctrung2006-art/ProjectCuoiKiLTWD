@@ -58,15 +58,15 @@ public class AppLauncher {
             LoginFrame loginFrame = new LoginFrame(taiKhoanController, () -> {
                 HoaDonManagementPanel hoaDonPanel = new HoaDonManagementPanel(hoaDonController);
                 NhanVienPanel nhanVienPanel = new NhanVienPanel(nhanVienController);
-                ThucUongPanel thucUongPanel = new ThucUongPanel(thucUongController);
+                // ThucUongPanel thucUongPanel = new ThucUongPanel(thucUongController);
                 PhieuNhapPanel phieuNhapPanel = new PhieuNhapPanel(phieuNhapController);
                 NguyenLieuPanel nguyenLieuPanel = new NguyenLieuPanel(nguyenLieuController);
                 NhaCungCapPanel nhaCungCapPanel = new NhaCungCapPanel(nhaCungCapController);
                 KhachHangPanel khachHangPanel = new KhachHangPanel(khachHangController);
 
                 MainFrame frame = new MainFrame(
-                        hoaDonPanel, nhanVienPanel, thucUongPanel,
-                        phieuNhapPanel, nguyenLieuPanel, nhaCungCapPanel, khachHangPanel, menuPanel);
+                        hoaDonPanel, nhanVienPanel, menuPanel,
+                        phieuNhapPanel, nguyenLieuPanel, nhaCungCapPanel, khachHangPanel);
                 frame.setVisible(true);
             });
             loginFrame.setVisible(true);
