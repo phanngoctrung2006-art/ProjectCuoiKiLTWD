@@ -1,10 +1,8 @@
 package com.cafe.view.component;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.util.List;
-import java.util.Locale.Category;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;

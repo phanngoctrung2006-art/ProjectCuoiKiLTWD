@@ -51,6 +51,8 @@ public class AppLauncher {
 
         LoaiThucUongDAO loaiThucUongDAO = new LoaiThucUongDAOImpl();
         MenuPanel menuPanel = new MenuPanel();
+
+        // Quan trọng: Khởi tạo controller cho menu
         MenuController menuController = new MenuController(menuPanel, thucUongService, loaiThucUongDAO);
 
         // View Layer (chỉ hiển thị giao diện, gọi controller)
