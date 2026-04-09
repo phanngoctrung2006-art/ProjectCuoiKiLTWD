@@ -5,32 +5,44 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Lớp Entity (Thực thể) đại diện cho bảng "NhanVien" trong CSDL.
+ * Dùng để quản lý thông tin nhân sự làm việc trong quán (Họ tên, mức lương, SĐT...).
+ */
 @Entity
 @Table(name = "NhanVien")
 public class NhanVien {
 
+    // Mã định danh của nhân viên
     @Id
     @Column(name = "MaNhanVien", columnDefinition = "CHAR(5)")
     private String MaNhanVien;
 
+    // Tên đầy đủ
     @Column(name = "TenNhanVien", length = 100)
     private String TenNhanVien;
 
+    // Ngày sinh
     @Column(name = "NgaySinh")
     private Date NgaySinh;
 
+    // Địa chỉ thường trú
     @Column(name = "DiaChi", length = 255)
     private String DiaChi;
 
+    // Số điện thoại liên lạc
     @Column(name = "SoDienThoai", length = 15)
     private String SoDienThoai;
 
+    // Mức lương cơ bản
     @Column(name = "Luong", precision = 10, scale = 2)
     private BigDecimal Luong;
 
+    // Các hóa đơn do nhân viên này lập
     @OneToMany(mappedBy = "NhanVien", cascade = CascadeType.ALL)
     private List<HoaDon> DanhSachHoaDon;
 
+    // Lịch sử các phiếu nhập hàng phần mềm do NV này thực hiện
     @OneToMany(mappedBy = "NhanVien", cascade = CascadeType.ALL)
     private List<PhieuNhap> DanhSachPhieuNhap;
 

@@ -2,23 +2,31 @@ package com.cafe.model.entity;
 
 import jakarta.persistence.*;
 
+/**
+ * Lớp Entity đại diện cho bảng "ChiTietHoaDon".
+ * Lưu trữ thông tin chi tiết các thức uống được gọi trong một hóa đơn cụ thể.
+ */
 @Entity
 @Table(name = "ChiTietHoaDon")
 public class ChiTietHoaDon {
 
+    // Khóa chính phức hợp (Bao gồm MaHoaDon và MaThucUong)
     @EmbeddedId
     private ChiTietHoaDonId Id;
 
+    // Liên kết với hóa đơn hiện tại
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("MaHoaDon")
     @JoinColumn(name = "MaHoaDon", columnDefinition = "CHAR(5)")
     private HoaDon HoaDon;
 
+    // Liên kết với thực thể thức uống
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("MaThucUong")
     @JoinColumn(name = "MaThucUong", columnDefinition = "CHAR(5)")
     private ThucUong ThucUong;
 
+    // Số lượng thức uống được đặt
     @Column(name = "SoLuong")
     private Integer SoLuong;
 

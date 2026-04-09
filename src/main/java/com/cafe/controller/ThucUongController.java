@@ -5,8 +5,8 @@ import com.cafe.service.ThucUongService;
 import java.util.List;
 
 /**
- * Controller: cầu nối giữa View và Service.
- * Không chứa logic nghiệp vụ hay validation - mọi thứ đều ở Service.
+ * Controller chuyên biệt xử lý các thao tác quản lý dữ liệu Thức Uống.
+ * Điều phối dữ liệu từ View xuống Service để thực hiện CRUD (Tạo, Sửa, Xóa).
  */
 public class ThucUongController {
     private final ThucUongService service;

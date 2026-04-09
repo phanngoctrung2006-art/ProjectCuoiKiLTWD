@@ -3,17 +3,24 @@ package com.cafe.model.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+/**
+ * Lớp Entity đại diện cho danh mục nhóm thức uống (VD: Cafe, Trà Sữa, Nước Ép...).
+ * Ánh xạ với bảng "LoaiThucUong" trong CSDL.
+ */
 @Entity
 @Table(name = "LoaiThucUong")
 public class LoaiThucUong {
 
+    // Mã loại nhóm thức uống (VD: L0001)
     @Id
     @Column(name = "MaLoai", columnDefinition = "CHAR(5)")
     private String MaLoai;
 
+    // Tên hiển thị loại thức uống
     @Column(name = "TenLoaiThucUong", length = 100)
     private String TenLoaiThucUong;
 
+    // Danh sách thức uống thuộc danh mục này
     @OneToMany(mappedBy = "LoaiThucUong", cascade = CascadeType.ALL)
     private List<ThucUong> DanhSachThucUong;
 

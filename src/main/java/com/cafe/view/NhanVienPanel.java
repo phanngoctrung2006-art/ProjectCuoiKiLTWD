@@ -7,6 +7,10 @@ import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 
+/**
+ * Màn hình cho chức năng Quản Lý Nhân Sự (Nhân Viên).
+ * Cho phép xem lương, ngày sinh, địa chỉ, bổ sung nút Cập nhật và Xóa.
+ */
 public class NhanVienPanel extends BaseManagementPanel {
 
     private final NhanVienController controller;
@@ -102,17 +106,28 @@ public class NhanVienPanel extends BaseManagementPanel {
         }
     }
 
+    /**
+     * Logic đẩy (Fill) dữ liệu khi click vô danh sách:
+     * Sử dụng sự kiện ListSelectionListener từ JTable. RowIndexToModel được dùng thay 
+     * vì RowIndex thường để lấy dữ liệu đúng vị trí ngay cả khi bảng JTable đang bị Sort (Sắp xếp) hay Filter.
+     */
     private void fillForm() {
         int row = table.getSelectedRow();
         if (row < 0) return;
+        
+        // Khóa Event không mong muốn phát súng (trigger) liên tục khi Fill form
         isUpdatingForm = true;
+        
+        // Convert dữ liệu để tương thích với chức năng Lọc (Filter) khi view bị biến dạng
         int m = table.convertRowIndexToModel(row);
+        
         txtMa.setText(str(tableModel.getValueAt(m, 0)));
         txtTen.setText(str(tableModel.getValueAt(m, 1)));
         txtNgaySinh.setText(str(tableModel.getValueAt(m, 2)));
         txtDiaChi.setText(str(tableModel.getValueAt(m, 3)));
         txtSdt.setText(str(tableModel.getValueAt(m, 4)));
         txtLuong.setText(str(tableModel.getValueAt(m, 5)));
+        
         isUpdatingForm = false;
     }
 
@@ -139,20 +154,31 @@ public class NhanVienPanel extends BaseManagementPanel {
         applyFilterOnColumns(new JTextField[]{ txtMa, txtTen, txtNgaySinh, txtDiaChi, txtSdt, txtLuong }, FILTER_COLS);
     }
 
-    // View chỉ thu thập dữ liệu từ form, gọi controller và hiển thị kết quả
+    /**
+     * Logic hàm Thêm Mới: 
+     * 1. Thu thập dữ liệu từ giao diện Form (Họ Tên, Ngày sinh, Loại...)
+     * 2. Gọi API getNextId để tự động sinh mã mới cho nhân viên.
+     * 3. Ép kiểu String từ GUI về BigDecimal / Date.
+     * 4. Gửi entity xuống Tầng Service để validation và Lưu SQL.
+     */
     private void doSave() {
         try {
             NhanVien nv = new NhanVien();
             nv.setMaNhanVien(controller.getNextId());
             nv.setTenNhanVien(txtTen.getText().trim());
+            // Sử dụng chuẩn java.sql.Date cho Data Type Ngày sinh trên DB
             nv.setNgaySinh(Date.valueOf(txtNgaySinh.getText().trim()));
             nv.setDiaChi(txtDiaChi.getText().trim());
             nv.setSoDienThoai(txtSdt.getText().trim());
+            
             String l = txtLuong.getText().trim();
             if (!l.isEmpty()) nv.setLuong(new BigDecimal(l));
+            
+            // Invoke Service logic
             controller.save(nv);
             showSuccess(this, "Lưu thành công!"); clearForm(); loadData();
         } catch (Exception ex) {
+            // Ném lỗi lên GUI qua Component JOptionPane nếu validation (ex) cấm thêm
             showError(this, ex.getMessage());
         }
     }

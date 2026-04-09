@@ -9,12 +9,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
+/**
+ * Lớp DAO phụ trách thực thi các câu truy vấn thống kê (Thống kê Doanh thu, 
+ * Sản phẩm bán chạy, Trung bình giá trị...).
+ * Sử dụng JPQL thay vì SQL tuần túy để tương tác với Hibernate Object.
+ */
 public class ReportDAOImpl implements ReportDAO {
 
     @Override
     public List<HoaDon> q01_getAllHoaDonWithCustomer() {
         EntityManager em = HibernateUtil.getEntityManager();
         try {
+            // Lấy danh sách hóa đơn kết hợp thông tin khách hàng bằng LEFT JOIN FETCH
+            // Giúp khắc phục lỗi N+1 Query hiệu quả trong Hibernate
             String jpql = "SELECT DISTINCT h FROM HoaDon h " +
                     "LEFT JOIN FETCH h.KhachHang " +
                     "ORDER BY h.NgayLap DESC";
@@ -31,6 +38,8 @@ public class ReportDAOImpl implements ReportDAO {
     public List<Map<String, Object>> q05_revenueByCustomer() {
         EntityManager em = HibernateUtil.getEntityManager();
         try {
+            // Gom nhóm danh sách Hóa Đơn theo ID khách để tính tổng tiền (SUM) đã mua 
+            // Cú pháp 'new map' trả về dữ liệu dưới dạng Map (Key-Value)
             String jpql = "SELECT new map(k.MaKhachHang as maKhachHang, " +
                     "k.TenKhachHang as tenKhachHang, " +
                     "COALESCE(SUM(h.TongTien), 0) as tongDoanhThu) " +

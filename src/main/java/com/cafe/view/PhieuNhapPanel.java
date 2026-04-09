@@ -10,6 +10,10 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 
+/**
+ * Panel cung cấp giao diện Quản Lý Phiếu Nhập Hàng.
+ * Cho phép lập phiếu nhập mới, liên kết với Nhân Viên và Nhà Cung Cấp.
+ */
 public class PhieuNhapPanel extends BaseManagementPanel {
 
     private final PhieuNhapController controller;

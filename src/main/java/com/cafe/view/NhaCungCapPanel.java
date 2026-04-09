@@ -5,6 +5,10 @@ import com.cafe.model.entity.NhaCungCap;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Khung giao diện quản lí thông tin Nhà Cung Cấp.
+ * Cho phép thiết lập thông tin đối tác cung cấp nguyên vật liệu cho cửa hàng.
+ */
 public class NhaCungCapPanel extends BaseManagementPanel {
 
     private final NhaCungCapController controller;

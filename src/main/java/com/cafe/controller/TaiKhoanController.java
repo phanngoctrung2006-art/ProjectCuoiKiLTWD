@@ -3,6 +3,9 @@ package com.cafe.controller;
 import com.cafe.model.entity.TaiKhoan;
 import com.cafe.service.TaiKhoanService;
 
+/**
+ * Controller chịu trách nhiệm nhận sự kiện điều khiển quá trình Đăng Nhập / Quản lí Account từ Form.
+ */
 public class TaiKhoanController {
 
     private final TaiKhoanService taiKhoanService;

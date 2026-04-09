@@ -6,6 +6,10 @@ import com.cafe.service.HoaDonService;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Lớp triển khai các logic nghiệp vụ cho Hóa Đơn.
+ * Kiểm tra tính hợp lệ của dữ liệu (Validation) trước khi gọi DAO để cập nhật CSDL.
+ */
 public class HoaDonServiceImpl implements HoaDonService {
     private final HoaDonDAO hoaDonDAO;
 
@@ -15,16 +19,21 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public List<HoaDon> getAll() {
+        // Gọi DAO để thực hiện câu Query SELECT * FROM hoadon
+        // Trả về danh sách tất cả các thực thể hóa đơn đang có trong database
         return hoaDonDAO.findAll();
     }
 
     @Override
     public HoaDon getById(String id) {
+        // Tìm 1 Record Hóa đơn dựa trên Khóa chính (Primary Key).
+        // Nếu không tìm thấy, hệ thống DAO sẽ trả về NULL.
         return hoaDonDAO.findById(id);
     }
 
     @Override
     public HoaDon create(HoaDon hoaDon) {
+        // Kiểm tra tính hợp lệ: Hóa đơn và Mã hóa đơn không được để trống
         if (hoaDon == null || hoaDon.getMaHoaDon() == null || hoaDon.getMaHoaDon().isEmpty()) {
             throw new IllegalArgumentException("Mã hóa đơn không được trống");
         }
@@ -33,6 +42,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public HoaDon update(HoaDon hoaDon) {
+        // Ràng buộc trước khi cập nhật
         if (hoaDon == null || hoaDon.getMaHoaDon() == null) {
             throw new IllegalArgumentException("Hóa đơn không hợp lệ");
         }
@@ -41,6 +51,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public void delete(String id) {
+        // Lớp Service đảm nhiệm phần bắt lỗi nghiệp vụ (Business Logic Exception).
+        // Đảm bảo không cho phép truyền xuống CSDL một câu truy vấn xóa rỗng, tránh Exception phía Hibernate.
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("ID không được trống");
         }
@@ -52,6 +64,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         if (maKhachHang == null || maKhachHang.isEmpty()) {
             throw new IllegalArgumentException("Mã khách hàng không được trống");
         }
+        // Sử dụng Java 8 Stream API để lọc danh sách Hóa Đơn trên Memory
+        // Filter: Duyệt qua tất cả hóa đơn (h), kiểm tra KhachHang tồn tại và so sánh mã
+        // toList(): Gom các kết quả khớp lại thành 1 List mới trả về
         return hoaDonDAO.findAll().stream()
                 .filter(h -> h.getKhachHang() != null && h.getKhachHang().getMaKhachHang().equals(maKhachHang))
                 .toList();
@@ -59,6 +74,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public BigDecimal getTotalRevenue() {
+        // Tính tổng doanh thu bằng cách cộng dồn cột TongTien của tất cả hóa đơn
         return hoaDonDAO.findAll().stream()
                 .map(HoaDon::getTongTien)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

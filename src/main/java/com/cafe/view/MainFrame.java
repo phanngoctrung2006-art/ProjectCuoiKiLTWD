@@ -3,6 +3,11 @@ package com.cafe.view;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Giao diện màn hình chính của ứng dụng.
+ * Là nơi chứa và quản lý các Tab chức năng (Hóa Đơn, Nhân Viên, Sản Phẩm...).
+ * Được khởi tạo sau khi đăng nhập thành công.
+ */
 public class MainFrame extends JFrame {
 
     public MainFrame(HoaDonManagementPanel hoaDonPanel,
@@ -13,20 +18,22 @@ public class MainFrame extends JFrame {
             NhaCungCapPanel nhaCungCapPanel,
             KhachHangPanel khachHangPanel) {
         setTitle("☕ Hệ Thống Quản Lý Bán Hàng Cafe");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1400, 900);
-        setLocationRelativeTo(null);
-        setResizable(true);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Thoát hẳn chương trình khi bấm dấu X
+        setSize(1400, 900); // Kích thước mặc định
+        setLocationRelativeTo(null); // Hiển thị ở chính giữa màn hình
+        setResizable(true); // Cho phép thay đổi kích thước
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Phóng to toàn màn hình ngay khi mở
         getContentPane().setBackground(new Color(20, 25, 35));
 
-        // Menu bar
+        // Menu bar tích hợp hiệu ứng chuyển màu Gradient
         JMenuBar menuBar = new JMenuBar() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g;
+                // Bật Antialiasing giúp hình vẽ mượt mà, không bị vỡ hạt (răng cưa)
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                // Đổ màu từ Xanh Đậm (trái) sang Xanh Nhạt (phải)
                 g2d.setPaint(new GradientPaint(0, 0, new Color(30, 50, 100), getWidth(), 0, new Color(30, 144, 255)));
                 g2d.fillRect(0, 0, getWidth(), getHeight());
             }
@@ -58,7 +65,7 @@ public class MainFrame extends JFrame {
         menuBar.add(menuHelp);
         setJMenuBar(menuBar);
 
-        // Tabbed Pane
+        // Khởi tạo khung chứa các Tab (Tabbed Pane) chức năng
         JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
         tabs.setBackground(new Color(30, 40, 55));
         tabs.setForeground(Color.WHITE);

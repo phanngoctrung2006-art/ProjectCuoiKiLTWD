@@ -19,6 +19,10 @@ import com.cafe.view.swing.MyTextField;
 
 import net.miginfocom.swing.MigLayout;
 
+/**
+ * Giao diện con (Sub-panel) phục vụ việc thu thập thông tin để Thêm Sản Phẩm Mới.
+ * Tích hợp tính năng Upload ảnh tĩnh.
+ */
 public class AddProductPanel extends JPanel {
     private JLabel titleLabel;
     private MyTextField productName;

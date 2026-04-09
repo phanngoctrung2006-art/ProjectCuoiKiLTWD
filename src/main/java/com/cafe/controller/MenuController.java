@@ -14,6 +14,10 @@ import com.cafe.service.ThucUongService;
 import com.cafe.view.MenuPanel;
 import com.cafe.view.component.AddProductPanel;
 
+/**
+ * Controller quản lý hiển thị và tương tác của giao diện Thực Đơn (Menu).
+ * Đảm nhiệm các chức năng thêm món, tải danh sách đồ uống, upload ảnh sản phẩm.
+ */
 public class MenuController {
     private MenuPanel menuPanel;
     private ThucUongService thucUongService;
@@ -45,7 +49,7 @@ public class MenuController {
     private void initEvents() {
         AddProductPanel addPanel = menuPanel.getAddProductPanel();
 
-        // Upload image
+        // Xử lý sự kiện Upload hình ảnh sản phẩm
         addPanel.setOnUploadClick(() -> {
             JFileChooser fileChooser = new JFileChooser();
 
@@ -88,7 +92,7 @@ public class MenuController {
             }
         });
 
-        // Add product
+        // Xử lý sự kiện Thêm sản phẩm mới vào Menu
         addPanel.setOnAddClick(() -> {
             String name = addPanel.getProductName().getText();
             if (!validateName(name)) {

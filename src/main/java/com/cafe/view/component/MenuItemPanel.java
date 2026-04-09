@@ -3,6 +3,10 @@ package com.cafe.view.component;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Giao diện tùy chỉnh (Custom Component) hiển thị 1 món nước ở trong Menu.
+ * Dùng layout kết hợp để hiển thị Ảnh, Tên món và Giá bán cách trực quan.
+ */
 public class MenuItemPanel extends JPanel {
     public MenuItemPanel(String name, String price, ImageIcon image) {
         setLayout(new BorderLayout(10, 10));

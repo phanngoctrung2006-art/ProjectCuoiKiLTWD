@@ -3,20 +3,28 @@ package com.cafe.model.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+/**
+ * Lớp Entity (Thực thể) đại diện cho bảng "KhachHang" trong CSDL.
+ * Dùng để quản lý thông tin khách hàng mua hàng (tên, sdt...).
+ */
 @Entity
 @Table(name = "KhachHang")
 public class KhachHang {
 
+    // Mã định danh khách hàng
     @Id
     @Column(name = "MaKhachHang", columnDefinition = "CHAR(5)")
     private String MaKhachHang;
 
+    // Tên đầy đủ của khách hàng
     @Column(name = "TenKhachHang", length = 100)
     private String TenKhachHang;
 
+    // Số điện thoại liên hệ
     @Column(name = "SoDienThoai", length = 15)
     private String SoDienThoai;
 
+    // Lịch sử các hóa đơn mà khách hàng này đã mua
     @OneToMany(mappedBy = "KhachHang", cascade = CascadeType.ALL)
     private List<HoaDon> DanhSachHoaDon;
 

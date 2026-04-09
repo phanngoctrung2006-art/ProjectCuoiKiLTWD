@@ -3,17 +3,24 @@ package com.cafe.model.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+/**
+ * Lớp Entity mô tả các Hình thức / Phương thức thanh toán của cửa hàng.
+ * Ví dụ: Tiền mặt, Chuyển khoản ngân hàng, Quẹt thẻ...
+ */
 @Entity
 @Table(name = "PhuongThucThanhToan")
 public class PhuongThucThanhToan {
 
+    // Mã định danh phương thức thanh toán
     @Id
     @Column(name = "MaThanhToan", columnDefinition = "CHAR(5)")
     private String MaThanhToan;
 
+    // Tên hiển thị loại hình thanh toán
     @Column(name = "TenThanhToan", length = 100)
     private String TenThanhToan;
 
+    // Các hóa đơn sử dụng phương thức này
     @OneToMany(mappedBy = "PhuongThucThanhToan", cascade = CascadeType.ALL)
     private List<HoaDon> DanhSachHoaDon;
 

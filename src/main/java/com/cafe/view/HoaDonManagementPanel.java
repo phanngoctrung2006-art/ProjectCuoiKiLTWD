@@ -16,6 +16,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Giao diện Quản Lý Hóa Đơn trung tâm.
+ * Bao gồm Form tạo hóa đơn, Bảng hiển thị (JTable), và tích hợp Báo Cáo Doanh Thu.
+ */
 public class HoaDonManagementPanel extends JPanel {
     private final HoaDonController controller;
     private JTextField txtMaHoaDon;
@@ -522,6 +526,7 @@ public class HoaDonManagementPanel extends JPanel {
                 return;
             }
 
+            // Xử lý tạo mới khách hàng (KhachHang) nếu không tìm thấy SĐT trong hệ thống
             KhachHang kh = controller.getKhachHangByPhone(soDienThoai);
             if (kh == null) {
                 // Nếu không tìm thấy khách hàng có thể tạo mới hoặc thông báo lỗi
@@ -554,6 +559,7 @@ public class HoaDonManagementPanel extends JPanel {
             String ghiChu = txtGhiChu.getText().trim();
             hd.setGhiChu(ghiChu);
 
+            // Cập nhật CSDL thông qua Controller
             controller.createHoaDon(hd);
             JOptionPane.showMessageDialog(this, "Lưu thành công",
                     "Thành công", JOptionPane.INFORMATION_MESSAGE);

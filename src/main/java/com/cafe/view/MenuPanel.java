@@ -14,6 +14,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+/**
+ * Màn hình giao diện bán hàng hiển thị danh sách Thức Uống (Menu).
+ * Hỗ trợ hiển thị ảnh sản phẩm dưới dạng lưới (Grid/MigLayout) và tích hợp panel AddProductPanel.
+ */
 public class MenuPanel extends JPanel {
     private JPanel productContainer;
     private AddProductPanel addProductPanel;
@@ -46,6 +50,7 @@ public class MenuPanel extends JPanel {
         add(addProductPanel, "grow");
     }
 
+    /** Render lại giao diện hiển thị danh sách tất cả các Thức Uống đang có */
     public void displayProducts(List<ThucUong> products) {
         productContainer.removeAll();
 

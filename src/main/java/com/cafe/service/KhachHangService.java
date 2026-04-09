@@ -3,6 +3,9 @@ package com.cafe.service;
 import com.cafe.model.entity.KhachHang;
 import java.util.List;
 
+/**
+ * Interface cấu hình các nghiệp vụ độc quyền liên quan đến Khách Hàng (Tích điểm, tìm kiếm SDT, ...).
+ */
 public interface KhachHangService {
     List<KhachHang> getAll();
 

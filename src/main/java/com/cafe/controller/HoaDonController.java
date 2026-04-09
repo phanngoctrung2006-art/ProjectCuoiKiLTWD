@@ -11,6 +11,10 @@ import com.cafe.service.ChiTietHoaDonService;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Lớp điều khiển chính cho chức năng Hóa Đơn.
+ * Đóng vai trò cầu nối (Controller) điều phối tương tác giữa Giao diện (View) và Nghiệp vụ (Service).
+ */
 public class HoaDonController {
     private final HoaDonService hoaDonService;
     private final KhachHangService khachHangService;

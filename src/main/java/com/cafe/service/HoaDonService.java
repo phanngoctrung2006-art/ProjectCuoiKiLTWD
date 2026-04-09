@@ -3,6 +3,10 @@ package com.cafe.service;
 import com.cafe.model.entity.HoaDon;
 import java.util.List;
 
+/**
+ * Interface định nghĩa các nghiệp vụ (Business Logic) liên quan đến quản lý Hóa Đơn.
+ * Tầng Service đứng giữa Controller và DAO để xử lý dữ liệu trước khi lưu/hiển thị.
+ */
 public interface HoaDonService {
     List<HoaDon> getAll();
 

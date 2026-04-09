@@ -5,6 +5,10 @@ import com.cafe.model.entity.NguyenLieu;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Lớp cung cấp giao diện hiển thị danh sách Nguyên Liệu trong kho.
+ * Các trường nhập tên, số lượng được kiểm tra hợp lệ trước khi lưu/cập nhật.
+ */
 public class NguyenLieuPanel extends BaseManagementPanel {
 
     private final NguyenLieuController controller;

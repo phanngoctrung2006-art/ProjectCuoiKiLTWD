@@ -5,6 +5,10 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Lớp cấu trúc Embeddable xử lý việc tạo Khóa chính phức hợp (Composite Key).
+ * Sử dụng để định nghĩa ID của bảng ChiTietHoaDon (gồm MaHoaDon và MaThucUong).
+ */
 @Embeddable
 public class ChiTietHoaDonId implements Serializable {
 

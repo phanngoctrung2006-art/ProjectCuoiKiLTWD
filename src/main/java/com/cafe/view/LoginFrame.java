@@ -8,6 +8,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Giao diện cửa sổ Đăng Nhập.
+ * Hiển thị khung nhập Username/Password. Cửa sổ này xuất hiện đầu tiên khi khởi chạy ứng dụng.
+ */
 public class LoginFrame extends JFrame {
 
     private final TaiKhoanController taiKhoanController;
@@ -90,17 +94,22 @@ public class LoginFrame extends JFrame {
     }
 
     private void setupListeners() {
+        // Lắng nghe sự kiện (Event Listener) khi người dùng Click chuột vào nút Đăng nhập
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Gọi hàm xử lý logic đăng nhập
                 handleLogin();
             }
         });
 
-        // Allow Enter key to submit
+        // Bắt sự kiện tạo UX mượt mà: Nhấn phím Enter (khi đang trỏ trên ô Mật khẩu) cũng sẽ Đăng nhập
         txtPassword.addActionListener(e -> handleLogin());
+        
+        // Bắt sự kiện: Đang nhập Username mà bấm Enter thì tự động nhảy trỏ chuột (Focus) xuống ô Password
         txtUsername.addActionListener(e -> txtPassword.requestFocus());
 
+        // Sử dụng cú pháp Lambda: Nút thoát gọi system exit để tắt hoàn toàn tiến trình Java
         btnExit.addActionListener(e -> System.exit(0));
     }
 
@@ -108,19 +117,27 @@ public class LoginFrame extends JFrame {
         String username = txtUsername.getText().trim();
         String password = new String(txtPassword.getPassword());
 
+        // Kiểm tra ràng buộc đầu vào không được null
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        // Chạy xác thực dữ liệu xuống DAO (Gọi SELECT user FROM TaiKhoan WHERE ...)
         TaiKhoan tk = taiKhoanController.authenticate(username, password);
-        if (tk != null) {
+        
+        if (tk != null) { // Xác thực thành công (tài khoản tồn tại trong DB)
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công! Xin chào, " + tk.getTenDangNhap() + ".", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            this.dispose(); // Hide login window
+            
+            // Xóa bộ nhớ và đóng ẩn cửa sổ Đăng Nhập
+            this.dispose(); 
+            
+            // Kích hoạt callback (lệnh khởi tạo MainFrame bên AppLauncher) để mở giao diện Main
             if (onSuccessCallback != null) {
-                onSuccessCallback.run(); // Launch MainFrame
+                onSuccessCallback.run(); 
             }
         } else {
+            // Không tìm thấy user hoặc sai mật khẩu
             JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }

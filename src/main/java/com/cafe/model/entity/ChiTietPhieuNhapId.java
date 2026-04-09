@@ -5,6 +5,10 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Lớp cấu trúc Embeddable để định nghĩa Khóa chính phức hợp (Composite Key).
+ * Sử dụng làm ID cho bảng ChiTietPhieuNhap (kết hợp mã Phiếu Nhập và mã Nguyên Liệu).
+ */
 @Embeddable
 public class ChiTietPhieuNhapId implements Serializable {
 

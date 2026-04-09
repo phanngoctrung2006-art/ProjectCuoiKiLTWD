@@ -3,26 +3,35 @@ package com.cafe.model.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
+/**
+ * Lớp Entity (Thực thể) mô tả chi tiết danh mục hàng hóa được nhập trong một Phiếu Nhập.
+ * Ánh xạ với bảng "ChiTietPhieuNhap" chứa thông tin số lượng, giá tiền từng loại linh kiện/vật tư.
+ */
 @Entity
 @Table(name = "ChiTietPhieuNhap")
 public class ChiTietPhieuNhap {
 
+    // Khóa chính phức hợp (Gồm mã Phiếu nhập và mã Nguyên liệu)
     @EmbeddedId
     private ChiTietPhieuNhapId Id;
 
+    // Phiếu nhập trỏ chiếu đến chi tiết này
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("MaPhieuNhap")
     @JoinColumn(name = "MaPhieuNhap", columnDefinition = "CHAR(5)")
     private PhieuNhap PhieuNhap;
 
+    // Nguyên vật liệu được nhập trong lô này
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("MaNguyenLieu")
     @JoinColumn(name = "MaNguyenLieu", columnDefinition = "CHAR(5)")
     private NguyenLieu NguyenLieu;
 
+    // Số lượng mặt hàng thực tế nhập vào kho
     @Column(name = "SoLuong")
     private Integer SoLuong;
 
+    // Đơn giá nhập của mặt hàng
     @Column(name = "Gia", precision = 10, scale = 2)
     private BigDecimal Gia;
 

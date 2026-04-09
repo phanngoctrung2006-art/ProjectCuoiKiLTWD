@@ -4,27 +4,37 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Lớp Entity đại diện cho bảng "ThucUong" trong CSDL.
+ * Quản lý thông tin các món nước (tên, giá cả, url hình ảnh...).
+ */
 @Entity
 @Table(name = "ThucUong")
 public class ThucUong {
 
+    // Mã định danh món thức uống
     @Id
     @Column(name = "MaThucUong", columnDefinition = "CHAR(5)")
     private String MaThucUong;
 
+    // Tên món thức uống
     @Column(name = "TenThucUong", length = 100)
     private String TenThucUong;
 
+    // Giá bán của thức uống
     @Column(name = "Gia", precision = 10, scale = 2)
     private BigDecimal Gia;
 
+    // Đường dẫn/Tên file hình ảnh hiển thị của món
     @Column(name = "Url", length = 50, nullable = false)
     private String url;
 
+    // Phân loại nhóm thức uống (VD: Trà, Cà phê)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaLoai")
     private LoaiThucUong LoaiThucUong;
 
+    // Lịch sử các chi tiết hóa đơn chứa thức uống này
     @OneToMany(mappedBy = "ThucUong", cascade = CascadeType.ALL)
     private List<ChiTietHoaDon> DanhSachChiTietHoaDon;
 

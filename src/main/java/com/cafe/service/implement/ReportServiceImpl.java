@@ -7,6 +7,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Tầng Service phục vụ tính toán và gọi các hàm Query thống kê từ ReportDAO.
+ * Số liệu được trả về sẽ cung cấp trực tiếp cho giao diện Dashboard báo cáo.
+ */
 public class ReportServiceImpl implements ReportService {
     private final ReportDAO reportDAO;
 

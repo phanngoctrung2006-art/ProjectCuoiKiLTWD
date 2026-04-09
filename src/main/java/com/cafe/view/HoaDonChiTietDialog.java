@@ -10,6 +10,10 @@ import java.awt.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Cửa sổ mở rộng dạng Dialog (Popup) để quản lý chi tiết bên trong 1 Hóa Đơn.
+ * Cho phép tăng giảm số lượng món, thêm món mới và cập nhật thành tiền.
+ */
 public class HoaDonChiTietDialog extends JDialog {
     private final HoaDonController controller;
     private final String maHoaDon;

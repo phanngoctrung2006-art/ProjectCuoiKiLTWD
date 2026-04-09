@@ -8,6 +8,11 @@ import jakarta.persistence.EntityTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Lớp trừu tượng (Abstract class) triển khai (implement) các hàm CRUD chung từ GenericDAO.
+ * Các DAO dành riêng cho từng Entity sẽ kế thừa lớp này để tự động có các hàm cơ bản.
+ * Sử dụng Hibernate / JPA (EntityManager) để tương tác CSDL.
+ */
 public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
     private final Class<T> entityClass;
@@ -22,6 +27,7 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
     @Override
     public T save(T entity) {
+        // Mở kết nối Database
         EntityManager em = HibernateUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

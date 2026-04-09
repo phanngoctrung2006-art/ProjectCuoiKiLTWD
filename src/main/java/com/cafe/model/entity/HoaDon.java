@@ -5,39 +5,52 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Lớp Entity đại diện cho bảng "HoaDon" trong Cơ sở dữ liệu.
+ * Chứa thông tin tổng quát về một giao dịch thanh toán của khách hàng.
+ */
 @Entity
 @Table(name = "HoaDon")
 public class HoaDon {
 
+    // Mã định danh hóa đơn (VD: HD001)
     @Id
     @Column(name = "MaHoaDon", columnDefinition = "CHAR(5)")
     private String MaHoaDon;
 
+    // Khởi tạo thời gian lập hóa đơn
     @Column(name = "NgayLap")
     private Date NgayLap;
 
+    // Tổng số tiền cần thanh toán
     @Column(name = "TongTien", precision = 10, scale = 2)
     private BigDecimal TongTien;
 
+    // Ghi chú thêm cho hóa đơn (VD: giảm đường, nhiều đá...)
     @Column(name = "GhiChu", length = 255)
     private String GhiChu;
 
+    // Liên kết với thông tin khách hàng mua
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaKhachHang")
     private KhachHang KhachHang;
 
+    // Liên kết với bàn nào
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaBan")
     private Ban Ban;
 
+    // Phương thức thanh toán (Tiền mặt, Chuyển khoản, v.v.)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaThanhToan")
     private PhuongThucThanhToan PhuongThucThanhToan;
 
+    // Nhân viên thực hiện lập hóa đơn này
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaNhanVien")
     private NhanVien NhanVien;
 
+    // Danh sách các chi tiết món đồ uống nằm trong hóa đơn
     @OneToMany(mappedBy = "HoaDon", cascade = CascadeType.ALL)
     private List<ChiTietHoaDon> DanhSachChiTietHoaDon;
 

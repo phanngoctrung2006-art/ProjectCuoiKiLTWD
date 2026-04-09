@@ -5,6 +5,10 @@ import com.cafe.model.entity.KhachHang;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Panel chứa Form quản lí đối tác/người mua hàng (Khách Hàng).
+ * Quản lí các chức năng tra cứu tên và số điện thoại người dùng.
+ */
 public class KhachHangPanel extends BaseManagementPanel {
 
     private final KhachHangController controller;

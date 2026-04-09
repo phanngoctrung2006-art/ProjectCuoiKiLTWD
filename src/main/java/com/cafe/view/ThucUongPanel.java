@@ -6,6 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 
+/**
+ * Panel cung cấp giao diện quản lý danh sách Thức Uống (CUD).
+ * Sử dụng BaseManagementPanel làm nền tảng (Base) cho việc tái sử dụng UI.
+ */
 public class ThucUongPanel extends BaseManagementPanel {
 
     private final ThucUongController controller;
