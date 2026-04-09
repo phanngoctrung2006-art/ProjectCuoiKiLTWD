@@ -16,11 +16,18 @@ public class NhaCungCapPanel extends BaseManagementPanel {
 
     private static final int[] FILTER_COLS = {0, 1, 2, 3};
 
+    /**
+     * Khởi tạo panel quản lý nhà cung cấp với controller tương ứng.
+     * @param controller Biến điều khiển các thao tác xử lý nghiệp vụ cho Nhà Cung Cấp
+     */
     public NhaCungCapPanel(NhaCungCapController controller) {
         this.controller = controller;
         build();
     }
 
+    /**
+     * Xây dựng và bố trí các thành phần giao diện người dùng trên panel.
+     */
     private void build() {
         add(makeHeader("QUẢN LÝ NHÀ CUNG CẤP"), BorderLayout.NORTH);
 
@@ -72,6 +79,10 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         loadData();
     }
 
+    /**
+     * Tạo và cấu hình panel chứa các nút chức năng.
+     * @return Panel chứa các nút Tìm kiếm, Lưu, Cập nhật, Xóa, Làm mới
+     */
     private JPanel buildButtons() {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 4));
         p.setOpaque(false);
@@ -89,6 +100,9 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         return p;
     }
 
+    /**
+     * Tải dữ liệu danh sách nhà cung cấp từ Controller và hiển thị lên bảng.
+     */
     @Override
     public void loadData() {
         tableModel.setRowCount(0);
@@ -96,6 +110,9 @@ public class NhaCungCapPanel extends BaseManagementPanel {
             tableModel.addRow(new Object[]{ncc.getMaNhaCungCap(), ncc.getTenNhaCungCap(), ncc.getDiaChi(), ncc.getSoDienThoai()});
     }
 
+    /**
+     * Điền thông tin nhà cung cấp từ dòng được chọn trên bảng vào các trường nhập liệu.
+     */
     private void fillForm() {
         int row = table.getSelectedRow();
         if (row < 0) return;
@@ -108,6 +125,9 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         isUpdatingForm = false;
     }
 
+    /**
+     * Làm sạch các trường nhập liệu trên form và bỏ chọn trên bảng.
+     */
     private void clearForm() {
         isUpdatingForm = true;
         txtMa.setText(""); txtTen.setText(""); txtDiaChi.setText(""); txtSdt.setText("");
@@ -116,6 +136,9 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         clearFilter();
     }
 
+    /**
+     * Làm sạch form và khởi chạy quá trình tìm kiếm.
+     */
     private void activateSearch() {
         isUpdatingForm = true;
         txtMa.setText(""); txtTen.setText(""); txtDiaChi.setText(""); txtSdt.setText("");
@@ -124,11 +147,17 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         applyFilter();
     }
 
+    /**
+     * Áp dụng bộ lọc dữ liệu vào bảng dựa trên các giá trị nhập trên form.
+     */
     @Override
     protected void applyFilter() {
         applyFilterOnColumns(new JTextField[]{txtMa, txtTen, txtDiaChi, txtSdt}, FILTER_COLS);
     }
 
+    /**
+     * Thực hiện việc lưu một nhà cung cấp mới vào cơ sở dữ liệu.
+     */
     // View chỉ thu thập dữ liệu từ form, gọi controller và hiển thị kết quả
     private void doSave() {
         try {
@@ -142,6 +171,9 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         } catch (Exception ex) { showError(this, ex.getMessage()); }
     }
 
+    /**
+     * Cập nhật thông tin của một nhà cung cấp đã tồn tại trong cơ sở dữ liệu.
+     */
     private void doUpdate() {
         try {
             String ma = txtMa.getText().trim();
@@ -156,6 +188,9 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         } catch (Exception ex) { showError(this, ex.getMessage()); }
     }
 
+    /**
+     * Xóa nhà cung cấp khỏi cơ sở dữ liệu sau khi xác nhận với người dùng.
+     */
     private void doDelete() {
         String ma = txtMa.getText().trim();
         if (ma.isEmpty()) { showError(this, "Chọn NCC cần xóa!"); return; }
@@ -166,5 +201,10 @@ public class NhaCungCapPanel extends BaseManagementPanel {
         }
     }
 
+    /**
+     * Phương thức tiện ích chuyển đổi Đối tượng thành Chuỗi.
+     * @param o Đối tượng cần chuyển đổi
+     * @return Chuỗi String hoặc rỗng nếu nguyên thủy là null
+     */
     private String str(Object o) { return o != null ? o.toString() : ""; }
 }

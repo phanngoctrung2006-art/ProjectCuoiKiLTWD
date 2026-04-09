@@ -11,7 +11,8 @@ import javax.swing.*;
 /**
  * Lớp khởi động chính của ứng dụng (Entry Point).
  * Áp dụng mô hình Dependency Injection thủ công (Manual DI):
- * Khởi tạo toàn bộ các DAO -> Truyền vào Service -> Truyền vào Controller -> Truyền vào View.
+ * Khởi tạo toàn bộ các DAO -> Truyền vào Service -> Truyền vào Controller ->
+ * Truyền vào View.
  */
 public class AppLauncher {
     public static void main(String[] args) {
@@ -61,10 +62,12 @@ public class AppLauncher {
         MenuController menuController = new MenuController(menuPanel, thucUongService, loaiThucUongDAO);
 
         // View Layer (chỉ hiển thị giao diện, điều phối qua controller)
-        // Sử dụng SwingUtilities.invokeLater để đảm bảo GUI chạy trên Event Dispatch Thread (EDT)
+        // Sử dụng SwingUtilities.invokeLater để đảm bảo GUI chạy trên Event Dispatch
+        // Thread (EDT)
         // giúp tránh lỗi giật lag hay treo frame giao diện của Java Swing.
         SwingUtilities.invokeLater(() -> {
-            // Khởi tạo LoginFrame, truyền vào callback để kích hoạt MainFrame sau khi đăng nhập đúng
+            // Khởi tạo LoginFrame, truyền vào callback để kích hoạt MainFrame sau khi đăng
+            // nhập đúng
             LoginFrame loginFrame = new LoginFrame(taiKhoanController, () -> {
                 HoaDonManagementPanel hoaDonPanel = new HoaDonManagementPanel(hoaDonController);
                 NhanVienPanel nhanVienPanel = new NhanVienPanel(nhanVienController);
@@ -78,7 +81,7 @@ public class AppLauncher {
                 MainFrame frame = new MainFrame(
                         hoaDonPanel, nhanVienPanel, menuPanel,
                         phieuNhapPanel, nguyenLieuPanel, nhaCungCapPanel, khachHangPanel);
-                
+
                 // Hiển thị giao diện chính lên màn hình
                 frame.setVisible(true);
             });

@@ -16,11 +16,18 @@ public class NguyenLieuPanel extends BaseManagementPanel {
 
     private static final int[] FILTER_COLS = {0, 1, 2};
 
+    /**
+     * Khởi tạo panel quản lý nguyên liệu với controller tương ứng.
+     * @param controller Biến điều khiển các thao tác xử lý nghiệp vụ cho Nguyên Liệu
+     */
     public NguyenLieuPanel(NguyenLieuController controller) {
         this.controller = controller;
         build();
     }
 
+    /**
+     * Xây dựng và bố trí các thành phần giao diện người dùng trên panel.
+     */
     private void build() {
         add(makeHeader("QUẢN LÝ NGUYÊN LIỆU"), BorderLayout.NORTH);
 
@@ -69,6 +76,10 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         loadData();
     }
 
+    /**
+     * Tạo và cấu hình panel chứa các nút chức năng.
+     * @return Panel chứa các nút Tìm kiếm, Lưu, Cập nhật, Xóa, Làm mới
+     */
     private JPanel buildButtons() {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 4));
         p.setOpaque(false);
@@ -86,6 +97,9 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         return p;
     }
 
+    /**
+     * Tải dữ liệu danh sách nguyên liệu từ Controller và hiển thị lên bảng.
+     */
     @Override
     public void loadData() {
         tableModel.setRowCount(0);
@@ -93,6 +107,9 @@ public class NguyenLieuPanel extends BaseManagementPanel {
             tableModel.addRow(new Object[]{nl.getMaNguyenLieu(), nl.getTenNguyenLieu(), nl.getSoLuong()});
     }
 
+    /**
+     * Điền thông tin nguyên liệu từ dòng được chọn trên bảng vào các trường nhập liệu.
+     */
     private void fillForm() {
         int row = table.getSelectedRow();
         if (row < 0) return;
@@ -104,6 +121,9 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         isUpdatingForm = false;
     }
 
+    /**
+     * Làm sạch các trường nhập liệu trên form và bỏ chọn trên bảng.
+     */
     private void clearForm() {
         isUpdatingForm = true;
         txtMa.setText(""); txtTen.setText(""); txtSoLuong.setText("");
@@ -112,6 +132,9 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         clearFilter();
     }
 
+    /**
+     * Làm sạch form form và khởi chạy quá trình tìm kiếm.
+     */
     private void activateSearch() {
         isUpdatingForm = true;
         txtMa.setText(""); txtTen.setText(""); txtSoLuong.setText("");
@@ -120,11 +143,17 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         applyFilter();
     }
 
+    /**
+     * Áp dụng bộ lọc dữ liệu vào bảng dựa trên các giá trị nhập trên form.
+     */
     @Override
     protected void applyFilter() {
         applyFilterOnColumns(new JTextField[]{txtMa, txtTen, txtSoLuong}, FILTER_COLS);
     }
 
+    /**
+     * Thực hiện việc lưu một nguyên liệu mới vào cơ sở dữ liệu.
+     */
     // View chỉ thu thập dữ liệu từ form, gọi controller và hiển thị kết quả
     private void doSave() {
         try {
@@ -138,6 +167,9 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         } catch (Exception ex) { showError(this, ex.getMessage()); }
     }
 
+    /**
+     * Cập nhật thông tin của một nguyên liệu đã tồn tại trong cơ sở dữ liệu.
+     */
     private void doUpdate() {
         try {
             String ma = txtMa.getText().trim();
@@ -152,6 +184,9 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         } catch (Exception ex) { showError(this, ex.getMessage()); }
     }
 
+    /**
+     * Xóa nguyên liệu khỏi cơ sở dữ liệu sau khi xác nhận với người dùng.
+     */
     private void doDelete() {
         String ma = txtMa.getText().trim();
         if (ma.isEmpty()) { showError(this, "Chọn nguyên liệu cần xóa!"); return; }
@@ -162,5 +197,10 @@ public class NguyenLieuPanel extends BaseManagementPanel {
         }
     }
 
+    /**
+     * Phương thức tiện ích chuyển đổi Đối tượng thành Chuỗi.
+     * @param o Đối tượng cần chuyển đổi
+     * @return Chuỗi String hoặc rỗng nếu nguyên thủy là null
+     */
     private String str(Object o) { return o != null ? o.toString() : ""; }
 }
