@@ -55,8 +55,6 @@ public class MenuPanel extends JPanel {
         productContainer.removeAll();
 
         for (ThucUong p : products) {
-            System.out.print(p.getTenThucUong());
-
             ImageIcon image = new ImageIcon(getClass().getResource(p.getUrl()));
             image = resizeImage(image, 200, 200);
             MenuItemPanel items = new MenuItemPanel(p.getTenThucUong(), p.getGia().toString(), image);
